@@ -15,7 +15,9 @@ module RegalBird
     alias_method :action, :[]
 
     def self.define(&block)
-      self.new.instance_eval(&block)
+      instance = self.new
+      instance.instance_eval(&block)
+      return instance
     end
 
     protected
