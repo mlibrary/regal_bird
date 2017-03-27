@@ -1,10 +1,10 @@
-require "event_log"
+require "regal_bird/event_log"
 
 module RegalBird
 
   # Tracks individual progress on a plan
   class Progress
-    attr_reader :id, :state
+    attr_accessor :id, :state, :event_log, :plan
 
     # @param id [String] unique id
     # @param plan [Plan]
@@ -23,17 +23,6 @@ module RegalBird
       self.state = event.state.to_sym
       event_log << event
     end
-
-    def self.define(&block)
-      self.new(nil, nil).instance_eval(&block)
-    end
-
-    protected
-    attr_writer :id, :plan, :state, :event_log
-
-    private
-    attr_reader :plan, :event_log
-
   end
 
 end
