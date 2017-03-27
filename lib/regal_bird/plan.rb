@@ -3,7 +3,10 @@ module RegalBird
 
   # Represents a series or tree of instructions.
   class Plan
-    def initialize
+    attr_reader :name
+
+    def initialize(name)
+      @name = name
       @map = {}
     end
 
@@ -14,8 +17,8 @@ module RegalBird
     end
     alias_method :action, :[]
 
-    def self.define(&block)
-      instance = self.new
+    def self.define(name, &block)
+      instance = self.new(name)
       instance.instance_eval(&block)
       return instance
     end
