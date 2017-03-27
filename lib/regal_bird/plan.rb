@@ -23,6 +23,12 @@ module RegalBird
       return instance
     end
 
+    def eql?(other)
+      name == other.name &&
+        @map == other.instance_variable_get(:@map)
+    end
+    alias_method :==, :eql?
+
     protected
 
     # @param state [Symbol]
