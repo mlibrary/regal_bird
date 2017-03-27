@@ -2,8 +2,9 @@
 module RegalBird
 
   class PlanRepo
-    def find(name); end
     def all; end
+    def find(name); end
+    def save(plan); end
   end
 
 end
