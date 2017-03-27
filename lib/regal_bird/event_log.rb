@@ -8,24 +8,33 @@ module RegalBird
 
     # Get the latest value for the passed key.
     def get(key)
-      index = @events.rindex {|event| event.data.has_key?(key) }
+      index = events.rindex {|event| event.data.has_key?(key) }
       if index
-        @events[index].data[key]
+        events[index].data[key]
       else
         nil
       end
     end
 
     def <<(event)
-      @events.push event
+      events.push event
       self
     end
 
     def where_action(action)
-      @events.select do |event|
+      events.select do |event|
         event.action == action
       end
     end
+
+    def eql?(other)
+      events == other.events
+    end
+    alias_method :==, :eql?
+
+    protected
+    attr_reader :events
+
   end
 
 end

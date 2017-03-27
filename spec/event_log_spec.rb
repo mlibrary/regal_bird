@@ -30,4 +30,10 @@ RSpec.describe RegalBird::EventLog do
       expect(event_log.where_action(:foo)).to match_array([foo1, foo2])
     end
   end
+
+  describe "#eql?" do
+    it "defers to the underlying array" do
+      expect(described_class.new([1,2,3])).to eql(described_class.new([1,2,3]))
+    end
+  end
 end
