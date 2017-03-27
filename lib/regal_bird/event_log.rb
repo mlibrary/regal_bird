@@ -8,16 +8,21 @@ module RegalBird
 
     # Get the latest value for the passed key.
     def get(key)
-      index = @events.index {|event| event.has_key?(key) }
-      @events[index][key]
+      index = @events.rindex {|event| event.data.has_key?(key) }
+      if index
+        @events[index].data[key]
+      else
+        nil
+      end
     end
 
     def <<(event)
       @events.push event
+      self
     end
 
     def where_action(action)
-      @events.select do
+      @events.select do |event|
         event.action == action
       end
     end
