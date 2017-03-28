@@ -2,21 +2,21 @@ require "regal_bird/repositories/plan_repo"
 require "regal_bird/plan"
 
 
-Rspec.shared_examples "a PlanRepo" do
+RSpec.shared_examples "a PlanRepo" do
   let(:plan1) do
     RegalBird::Plan.define("plan1") do
-      add(:init,  double(:action1))
-      add(:one,   double(:action2))
-      add(:two,   double(:action3))
-      add(:three, double(:action4))
-      add(:four,  double(:action5))
-      add(:five,  double(:action6))
+      add(:init,  :action1)
+      add(:one,   :action2)
+      add(:two,   :action3)
+      add(:three, :action4)
+      add(:four,  :action5)
+      add(:five,  :action6)
     end
   end
   let(:plan2) do
     RegalBird::Plan.define("plan2") do
-      add(:init,  double(:start))
-      add(:one,   double(:finish))
+      add(:init,  :start)
+      add(:one,   :finish)
     end
   end
 
