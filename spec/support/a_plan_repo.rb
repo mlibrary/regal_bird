@@ -20,16 +20,21 @@ Rspec.shared_examples "a PlanRepo" do
     end
   end
 
-  it "saves and returns plans by name" do
-    repo.save(plan1)
-    repo.save(plan2)
-    expect(repo.find(plan1.name)).to eql(plan1)
-    expect(repo.find(plan2.name)).to eql(plan2)
+  describe "#save, #find" do
+    it "saves and returns plans by name" do
+      repo.save(plan1)
+      repo.save(plan2)
+      expect(repo.find(plan1.name)).to eql(plan1)
+      expect(repo.find(plan2.name)).to eql(plan2)
+    end
   end
 
-  it "#all returns all plans" do
-    repo.save(plan1)
-    repo.save(plan2)
-    expect(repo.all).to contain_exactly(plan1, plan2)
+  describe "#all" do
+    it "returns all records" do
+      repo.save(plan1)
+      repo.save(plan2)
+      expect(repo.all).to contain_exactly(plan1, plan2)
+    end
   end
+
 end
