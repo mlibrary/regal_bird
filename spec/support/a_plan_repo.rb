@@ -1,15 +1,15 @@
 require "regal_bird/repositories/plan_repo"
 require "regal_bird/plan"
-require "regal_bird/action"
 
 module RegalBird
-  class ActionOne < Action; end
-  class ActionTwo < Action; end
-  class ActionThree < Action; end
-  class ActionFour < Action; end
-  class ActionFive < Action; end
+  class ActionOne; end
+  class ActionTwo; end
+  class ActionThree; end
+  class ActionFour; end
+  class ActionFive; end
 
   RSpec.shared_examples "a PlanRepo" do
+
     let(:plan1) do
       RegalBird::Plan.new("plan1", {
         init: ActionOne,
@@ -19,6 +19,7 @@ module RegalBird
         four: ActionFive
       })
     end
+
     let(:plan2) do
       RegalBird::Plan.new("plan2", {
         init: ActionOne,
