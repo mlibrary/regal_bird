@@ -5,13 +5,19 @@ module RegalBird
   class Plan
     attr_reader :name
 
-    def initialize(name)
+    # @param name [String,Symbol]
+    # @param mappings [Hash<Symbol,Action.class>]
+    def initialize(name, mappings)
       @name = name
-      @map = {}
+      @map = mappings
     end
 
     def initial_state
       :init
+    end
+
+    def mappings
+      @map.to_a
     end
 
     # @param state [Symbol]
@@ -21,25 +27,11 @@ module RegalBird
     end
     alias_method :action, :[]
 
-    def self.define(name, &block)
-      instance = self.new(name)
-      instance.instance_eval(&block)
-      return instance
-    end
-
     def eql?(other)
       name == other.name &&
-        @map == other.instance_variable_get(:@map)
+        mappings == other.mappings
     end
     alias_method :==, :eql?
-
-    protected
-
-    # @param state [Symbol]
-    # @param action_factory [Action.class]
-    def add(state, action_factory)
-      @map[state.to_sym] = action_factory
-    end
   end
 
 end
