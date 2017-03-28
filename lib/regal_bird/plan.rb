@@ -10,6 +10,10 @@ module RegalBird
       @map = {}
     end
 
+    def initial_state
+      :init
+    end
+
     # @param state [Symbol]
     # @return [Action.class]
     def [](state)
