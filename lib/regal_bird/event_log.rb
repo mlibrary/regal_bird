@@ -27,6 +27,10 @@ module RegalBird
       end
     end
 
+    def state
+      events.last&.state || :init
+    end
+
     def eql?(other)
       events == other.events
     end

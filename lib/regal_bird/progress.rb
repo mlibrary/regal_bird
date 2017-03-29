@@ -4,15 +4,18 @@ module RegalBird
 
   # Tracks individual progress on a plan
   class Progress
-    attr_accessor :id, :state, :event_log, :plan
+    attr_accessor :id, :event_log, :plan
 
     # @param id [String] unique id
     # @param plan [Plan]
     def initialize(id, plan)
       @id = id
       @plan = plan
-      @state = plan.initial_state
       @event_log = EventLog.new
+    end
+
+    def state
+      event_log.state || :init
     end
 
     # Given the current state, run the next action as directed

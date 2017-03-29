@@ -5,6 +5,7 @@ module RegalBird
     def all; end
     def find(name); end
     def save(plan); end
+    def migrate!; end
   end
 
 end
