@@ -1,28 +1,37 @@
 require "logger"
-require "ostruct"
 require "yaml"
+require "ostruct"
 
 module RegalBird
 
-  class Configuration < OpenStruct
+  class Configuration <  OpenStruct
+    DEFAULTS = {
+      queue_adapter: :inline,
+      scheduler: :disabled,
+      plan_dir: nil,
+      db: nil,
+    }.freeze
 
     def initialize(hash = {})
-      super hash.merge(logger: NullLogger.new)
+      super(hash.merge(DEFAULTS))
     end
 
-    def self.from_yaml(path)
-      new(YAML.load(path))
+    def plan_dir=(value)
+      self[:plan_dir] = if value.nil?
+        nil
+      else
+        Pathname.new(value)
+      end
+    end
+
+    def plan_dir
+      self[:plan_dir]
     end
 
     def valid?
-      has_key? :queue_adapter
-    end
-
-    private
-
-    class NullLogger < Logger
-      def initialize(*args); end
-      def add(*args, &block); end
+      [:queue_adapter, :scheduler, :plan_dir, :db]
+        .select{|field| self.send(field).nil? }
+        .empty?
     end
 
   end
