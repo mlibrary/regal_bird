@@ -8,10 +8,10 @@ module RegalBird
 
     # @param id [String] unique id
     # @param plan [Plan]
-    def initialize(id, plan)
+    def initialize(id, plan, event_log = EventLog.new)
       @id = id
       @plan = plan
-      @event_log = EventLog.new
+      @event_log = event_log
     end
 
     def state
@@ -23,9 +23,15 @@ module RegalBird
     # accordingly.
     def run_next
       event = plan.action(state).new(event_log).execute
-      self.state = event.state.to_sym
       event_log << event
     end
+
+    def eql?(other)
+      id == other.id &&
+        plan == other.plan &&
+        event_log == other.event_log
+    end
+    alias_method :==, :eql?
   end
 
 end
