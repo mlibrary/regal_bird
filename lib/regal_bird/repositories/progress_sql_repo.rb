@@ -5,11 +5,12 @@ require "event_log"
 require "repositories/progress_sql_repo/progress_record"
 require "repositories/progress_sql_repo/event_record"
 
-require "sequel"
+require "active_record"
+require "pathname"
 
 module RegalBird
 
-  class ProgressSqlRepo < ProgressRepo
+  class ProgressSqlRepo
 
     # @param plan_repo [PlanRepo]
     def initialize(connection, plan_repo)
@@ -18,8 +19,7 @@ module RegalBird
     end
 
     def migrate!
-      Sequel.extension :migration
-      Sequel::Migrator.run(connection, migrations_dir.to_s)
+      ActiveRecord::Migrator.migrate(migrations_dir.to_s, nil)
     end
 
     def all
@@ -29,19 +29,20 @@ module RegalBird
     end
 
     def find(id)
-      ProgressRecord[progress_id: id].to_progress(plan_repo)
+      ProgressRecord.find_by_domain_id(id).to_progress(plan_repo)
     end
 
     def save(progress)
-      @connection.transaction do
+      ProgressRecord.transaction do
         plan_repo.save(progress.plan)
-        ProgressRecord[progress_id: progress.id].delete
-        ProgressRecord.from_progress(progress).save
+        ProgressRecord.from_progress(progress).save!
       end
     end
 
     def where_state(state)
-      # EventRecord.group(:progress_id)
+      ProgressRecord.where(state: state).map do |record|
+        record.to_progress(plan_repo)
+      end
     end
 
     private

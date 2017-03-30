@@ -1,15 +1,14 @@
-Sequel.migration do
-  up do
-    create_table(:progresses) do
-      primary_key :id
-      String :progress_id, size: 36, unique: true, null: false
-      String :state, null: false
-      String :plan, null: false
+class CreateProgresses < ActiveRecord::Migration[5.0]
+  def up
+    create_table :progresses do |t|
+      t.string :domain_id, limit: 36, unique: true, null: false
+      t.string :state, null: false
+      t.string :plan, null: false
     end
   end
 
-  down do
-    drop_table(:progresses)
+  def down
+    drop_table :progresses
   end
 
 end

@@ -1,20 +1,20 @@
-Sequel.migration do
-  up do
-    create_table(:events) do
-      primary_key :id
-      foreign_key :progress_id, :progresses, key: :id,
-        on_delete: :cascade,
-        on_update: :cascade
-      String :action, null: false
-      String :state, null: false
-      String :data, text: true, null: false
-      Time :start_time, null: false
-      Time :end_time, null: false
+class CreateEvents < ActiveRecord::Migration[5.0]
+  def up
+    create_table :events do |t|
+      t.integer :progress_id, null: false
+      t.string :action, null: false
+      t.string :state, null: false
+      t.datetime :start_time, null: false
+      t.datetime :end_time, null: false
+      t.text :data
     end
+    add_foreign_key :events, :progresses,
+      column: :progress_id, primary_key: :id,
+      on_delete: :cascade, on_update: :cascade
   end
 
-  down do
-    drop_table(:events)
+  def down
+    drop_table :events
   end
 
 end
