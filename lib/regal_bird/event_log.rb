@@ -2,6 +2,8 @@
 module RegalBird
 
   class EventLog
+    attr_reader :events
+
     def initialize(events = [])
       @events = events
     end
@@ -37,7 +39,6 @@ module RegalBird
     alias_method :==, :eql?
 
     protected
-    attr_reader :events
 
   end
 
