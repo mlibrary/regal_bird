@@ -13,12 +13,21 @@ module RegalBird
     # @param start_time [Time]
     # @param end_time [Time]
     def initialize(action:, state:, data:, start_time:, end_time:)
-      @action = action
-      @state = state
+      @action = action.to_sym
+      @state = state.to_sym
       @data = data
-      @start_time = start_time
-      @end_time = end_time
+      @start_time = start_time.utc
+      @end_time = end_time.utc
     end
+
+    def eql?(other)
+      action == other.action &&
+        state == other.state &&
+        start_time == other.start_time &&
+        end_time == other.end_time &&
+        data == other.data
+    end
+    alias_method :==, :eql?
   end
 
 end
