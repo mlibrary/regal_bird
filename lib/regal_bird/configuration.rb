@@ -6,10 +6,7 @@ module RegalBird
 
   class Configuration <  OpenStruct
     DEFAULTS = {
-      queue_adapter: :inline,
-      scheduler: :disabled,
-      plan_dir: nil,
-      db: nil,
+      plan_dir: nil
     }.freeze
 
     def initialize(hash = {})
@@ -29,9 +26,7 @@ module RegalBird
     end
 
     def valid?
-      [:queue_adapter, :scheduler, :plan_dir, :db]
-        .select{|field| self.send(field).nil? }
-        .empty?
+      !plan_dir.nil?
     end
 
   end
