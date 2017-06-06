@@ -1,4 +1,5 @@
 require "securerandom"
+require "regal_bird/event"
 
 module RegalBird
 
