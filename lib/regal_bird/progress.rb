@@ -1,5 +1,3 @@
-require "regal_bird/event_log"
-
 module RegalBird
 
   # Tracks individual progress on a plan

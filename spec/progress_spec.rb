@@ -1,5 +1,4 @@
 require "regal_bird/progress"
-require "regal_bird/event_log"
 
 module RegalBird
   RSpec.describe Progress do
