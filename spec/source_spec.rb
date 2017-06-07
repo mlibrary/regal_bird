@@ -5,8 +5,8 @@ RSpec.describe RegalBird::Source do
 
   describe "#wrap_execution" do
     let(:source) { described_class.new }
-    let(:result_1) {{ state: :foo_state, data: {zip: [12,34]} }}
-    let(:result_2) {{ state: :bar_state, data: {} }}
+    let(:result_1) {{ item_id: "1", state: :foo_state, data: {zip: [12,34]} }}
+    let(:result_2) {{ item_id: "2", state: :bar_state, data: {} }}
     let(:results) { [result_1, result_2] }
     let(:action_name) { described_class.to_s.to_sym }
 
