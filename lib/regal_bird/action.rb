@@ -3,13 +3,16 @@ require "regal_bird/event"
 
 module RegalBird
 
+  # Actions are executed against an item based on the action's
+  # associated state in the plan. They receive and emit an
+  # Event.
   class Action
 
-    attr_reader :event_log
+    attr_reader :event
 
-    # @param event_log [EventLog]
-    def initialize(event_log)
-      @event_log = event_log
+    # @param event [Event]
+    def initialize(event)
+      @event = event
     end
 
     # @return [Event]
@@ -22,31 +25,25 @@ module RegalBird
     end
 
     def noop
-      {state: event_log.state, data: {}}
+      {state: event.state, data: {}}
     end
 
     def failure(message)
-      {state: event_log.state, data: {error: log_error(message)}}
-    end
-
-    def log_error(message)
-      id = SecureRandom.uuid
-      RegalBird.config.logger.error(id) { message }
-      return id
+      {state: event.state, data: {error: message}}
     end
 
     def wrap_execution
       start_time = Time.now.utc
       begin
         result = yield
-        RegalBird::Event.new(state: result[:state], action: self.class.to_s,
-          start_time: start_time, end_time: Time.now.utc,
-          data: result[:data]
+        RegalBird::Event.new(item_id: event.item_id, state: result[:state],
+          action: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
+          data: event.data.merge(result[:data])
         )
       rescue StandardError => e
-        RegalBird::Event.new(state: event_log.state, action: self.class.to_s,
-          start_time: start_time, end_time: Time.now.utc,
-          data: {error: log_error("#{e.message}\n#{e.backtrace}")}
+        RegalBird::Event.new(item_id: event.item_id, state: event_log.state,
+          action: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
+          data: {error: "#{e.message}\n#{e.backtrace}"}
         )
       end
     end

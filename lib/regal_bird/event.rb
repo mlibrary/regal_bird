@@ -1,10 +1,9 @@
 
 module RegalBird
 
-  # A record of execution.
   class Event
 
-    attr_reader :action, :state, :data, :start_time, :end_time
+    attr_reader :item_id, :action, :state, :data, :start_time, :end_time
 
     # @param action [Symbol] the name of the #Action
     # @param state [Symbol] the result state
@@ -12,7 +11,8 @@ module RegalBird
     #   generated this event
     # @param start_time [Time]
     # @param end_time [Time]
-    def initialize(action:, state:, data:, start_time:, end_time:)
+    def initialize(item_id:, action:, state:, data:, start_time:, end_time:)
+      @item_id = item_id.to_s
       @action = action.to_sym
       @state = state.to_sym
       @data = data
@@ -22,6 +22,7 @@ module RegalBird
 
     def eql?(other)
       action == other.action &&
+        item_id == other.item_id &&
         state == other.state &&
         start_time == other.start_time &&
         end_time == other.end_time &&

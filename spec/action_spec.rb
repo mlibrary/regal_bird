@@ -2,18 +2,8 @@ require "regal_bird/action"
 require "regal_bird/event"
 
 RSpec.describe RegalBird::Action do
-  let(:event_log) { double(:event_log, state: :some_state)}
-  let(:action) { described_class.new(event_log) }
-
-  class TestLogger
-    attr_accessor :errors
-    def initialize
-      @errors = []
-    end
-    def error(progname, &block)
-      @errors << [progname, block.call]
-    end
-  end
+  let(:event) { double(:event, item_id: "55", state: :some_state, data: {f: 5, c: 6}) }
+  let(:action) { described_class.new(event) }
 
   describe "#noop" do
     it "has the previous state" do
@@ -43,27 +33,11 @@ RSpec.describe RegalBird::Action do
 
   describe "#failure" do
     let(:message) { "there was a problem, captain" }
-    let(:log) { TestLogger.new }
-    before(:each) do
-      allow(RegalBird).to receive(:config).and_return(double(:config, logger: log))
-    end
     it "has the previous state" do
       expect(action.failure(message)[:state]).to eql(:some_state)
     end
-    it "logs exactly one entry" do
-      action.failure(message)
-      expect(log.errors.size).to eql(1)
-    end
-    it "logs the message" do
-      action.failure(message)
-      expect(log.errors.size).to eql(1)
-    end
-    it "tags the logged message with an id" do
-      action.failure(message)
-      expect(log.errors.first).to match_array([anything, message])
-    end
-    it "assigns the log tag to data[:error]" do
-      expect(action.failure(message)[:data]).to eql({error: log.errors.first.first})
+    it "assigns the message to data[:error]" do
+      expect(action.failure(message)[:data]).to eql({error: message})
     end
     it "has no extra keys" do
       expect(action.failure(message).keys).to contain_exactly(:state, :data)
@@ -78,14 +52,17 @@ RSpec.describe RegalBird::Action do
       it "returns an event" do
         expect(action.wrap_execution{result}).to be_an_instance_of(RegalBird::Event)
       end
+      it "returns an event with item_id == previous item_id" do
+        expect(action.wrap_execution{result}.item_id).to eql(event.item_id)
+      end
       it "returns an event with action == self.class.to_s.to_sym" do
         expect(action.wrap_execution{result}.action).to eql(described_class.to_s.to_sym)
       end
       it "returns an event with state == block.call[:state]" do
         expect(action.wrap_execution{result}.state).to eql(state)
       end
-      it "returns an event with data == block.call[:data]" do
-        expect(action.wrap_execution{result}.data).to eql(data)
+      it "returns an event with data == previous.merge(block.call[:data])" do
+        expect(action.wrap_execution{result}.data).to eql(event.data.merge(data))
       end
       it "manages start_time and end_time" do
         mid_time = nil
