@@ -3,36 +3,48 @@ module RegalBird
 
   # Represents a series or tree of instructions.
   class Plan
-    attr_reader :name
+    ActionDeclaration = Struct.new(:klass, :state, :num_workers)
+    SourceDeclaration = Struct.new(:klass, :interval)
+
+    attr_reader :name, :actions, :sources
 
     # @param name [String,Symbol]
-    # @param mappings [Hash<Symbol,Action.class>]
-    def initialize(name, mappings)
+    def initialize(name)
       @name = name
-      @map = mappings
+      @actions = []
+      @sources = []
     end
 
-    def initial_state
-      :init
+    def add_source_declaration(declaration)
+      @sources << declaration
+      self
     end
 
-    def mappings
-      @map.to_a
+    def add_source(klass, interval)
+      add_source_declaration SourceDeclaration.new(klass, interval)
+      self
     end
 
-    # @param state [Symbol]
-    # @return [Action.class]
-    def [](state)
-      @map[state.to_sym]
+    def add_action_declaration(declaration)
+      @actions << declaration
+      self
     end
-    alias_method :action, :[]
+
+    def add_action(klass, state, num_workers)
+      add_action_declaration ActionDeclaration.new(klass, state, num_workers)
+      self
+    end
 
     def eql?(other)
       name == other.name &&
-        mappings == other.mappings
+        actions == other.actions &&
+        sources == other.sources
     end
     alias_method :==, :eql?
+
   end
+
+
 
 end
 
