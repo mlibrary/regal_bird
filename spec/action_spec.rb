@@ -56,7 +56,7 @@ RSpec.describe RegalBird::Action do
         expect(action.wrap_execution{result}.item_id).to eql(event.item_id)
       end
       it "returns an event with action == self.class.to_s.to_sym" do
-        expect(action.wrap_execution{result}.action).to eql(described_class.to_s.to_sym)
+        expect(action.wrap_execution{result}.action).to eql(described_class.to_s)
       end
       it "returns an event with state == block.call[:state]" do
         expect(action.wrap_execution{result}.state).to eql(state)
