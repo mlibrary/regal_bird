@@ -25,7 +25,7 @@ module RegalBird
         results = yield
         results.map do |result|
           RegalBird::Event.new(item_id: result[:item_id], state: result[:state],
-            action: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
+            emitter: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
             data: result[:data]
           )
         end

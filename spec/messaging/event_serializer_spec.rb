@@ -5,7 +5,7 @@ require "json"
 RSpec.describe RegalBird::Messaging::EventSerializer do
   let(:opts) do
     {
-      item_id: "foo", action: "My::Action", state: :ready,
+      item_id: "foo", emitter: "My::Action", state: :ready,
       data: {some: [1,2,3], stuff: "foo"},
       start_time: Time.at(1231231), end_time: Time.now
     }
@@ -13,7 +13,7 @@ RSpec.describe RegalBird::Messaging::EventSerializer do
   let(:event) { RegalBird::Event.new(opts) }
   let(:json) do
     JSON.generate({
-      item_id: opts[:item_id], action: opts[:action],
+      item_id: opts[:item_id], emitter: opts[:emitter],
       state: opts[:state], data: opts[:data],
       start_time: opts[:start_time].iso8601(9),
       end_time: opts[:end_time].iso8601(9)

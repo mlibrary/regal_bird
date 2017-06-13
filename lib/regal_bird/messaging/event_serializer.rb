@@ -8,7 +8,7 @@ module RegalBird
       def self.serialize(event)
         JSON.generate({
           item_id: event.item_id,
-          action: event.action,
+          emitter: event.emitter,
           state: event.state,
           data: event.data,
           start_time: event.start_time.iso8601(9),
@@ -20,7 +20,7 @@ module RegalBird
         hash = JSON.parse(string, symbolize_names: true)
         RegalBird::Event.new(
           item_id: hash[:item_id],
-          action: hash[:action],
+          emitter: hash[:emitter],
           state: hash[:state],
           data: hash[:data],
           start_time: Time.parse(hash[:start_time]),

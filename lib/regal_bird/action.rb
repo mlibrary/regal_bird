@@ -37,12 +37,12 @@ module RegalBird
       begin
         result = yield
         RegalBird::Event.new(item_id: event.item_id, state: result[:state],
-          action: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
+          emitter: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
           data: event.data.merge(result[:data])
         )
       rescue StandardError => e
         RegalBird::Event.new(item_id: event.item_id, state: event_log.state,
-          action: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
+          emitter: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
           data: {error: "#{e.message}\n#{e.backtrace}"}
         )
       end
