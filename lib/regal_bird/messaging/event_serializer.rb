@@ -1,3 +1,5 @@
+require "json"
+
 module RegalBird
   module Messaging
 
