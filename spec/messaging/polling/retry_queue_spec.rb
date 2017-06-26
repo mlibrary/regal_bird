@@ -12,13 +12,14 @@ RSpec.describe RegalBird::Messaging::Polling::RetryQueue do
   subject { described_class.new(channel, work_exchange, retry_exchange, step_class, interval) }
 
   describe "#new" do
-    it "initializes a non-exclusive, durable, dlx queue" do
+    it "initializes a non-exclusive, durable, dlx, size==1 queue" do
       expect(channel).to receive(:queue)
         .with(queue_name, {
         exclusive: false, auto_delete: false, durable: true,
         arguments: {
           "x-dead-letter-exchange" => work_exchange.name,
-          "x-message-ttl" => interval * 1000
+          "x-message-ttl" => interval * 1000,
+          "x-max-length" => 1
         }
       })
       subject

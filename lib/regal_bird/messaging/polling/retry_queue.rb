@@ -13,7 +13,8 @@ module RegalBird
             durable: true,
             arguments: {
               "x-dead-letter-exchange" => work_exchange.name,
-              "x-message-ttl" => interval * 1000
+              "x-message-ttl" => interval * 1000,
+              "x-max-length" => 1
             }
           )
           @queue.bind(retry_exchange,
