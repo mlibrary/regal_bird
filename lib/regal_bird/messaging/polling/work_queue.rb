@@ -1,28 +1,31 @@
+require "regal_bird/messaging/queue"
+
 module RegalBird
   module Messaging
     module Polling
 
-      class WorkQueue < SimpleDelegator
+      class WorkQueue < Queue
 
         def initialize(channel, work_exchange, step_class, routing_key)
           @channel = channel
           @step_class = step_class
           @routing_key = routing_key
-          @queue = channel.queue(
-            name,
+          super(channel, work_exchange)
+        end
+
+        def channel_opts
+          {
             exclusive: false,
             auto_delete: false,
             durable: true,
             arguments: {
               "x-max-length" => 1
             }
-          )
-          @queue.bind(work_exchange, routing_key: routing_key)
-          __setobj__ @queue
+          }
         end
 
-        def ack(delivery_tag)
-          @channel.ack(delivery_tag, false)
+        def bind_opts
+          route
         end
 
         def name

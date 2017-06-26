@@ -1,13 +1,22 @@
+require "regal_bird/messaging/queue"
+
 module RegalBird
   module Messaging
     module Polling
 
-      class RetryQueue
+      class RetryQueue < Queue
 
         def initialize(channel, work_exchange, retry_exchange, step_class, interval)
+          @channel = channel
+          @work_exchange = work_exchange
+          @retry_exchange = retry_exchange
           @step_class = step_class
-          @queue = channel.queue(
-            name,
+          @interval = interval
+          super(channel, retry_exchange)
+        end
+
+        def channel_opts
+          {
             exclusive: false,
             auto_delete: false,
             durable: true,
@@ -16,10 +25,15 @@ module RegalBird
               "x-message-ttl" => interval * 1000,
               "x-max-length" => 1
             }
-          )
-          @queue.bind(retry_exchange,
-            arguments: route.merge({"x-match" => "all"})
-          )
+          }
+        end
+
+        def bind_opts
+          { arguments: route.merge({"x-match" => "all"}) }
+        end
+
+        def name
+          "source-#{step_class.to_s.downcase.gsub("::", "_")}-retry"
         end
 
         def route
@@ -27,12 +41,7 @@ module RegalBird
         end
 
         private
-        attr_reader :step_class
-
-        def name
-          "source-#{step_class.to_s.downcase.gsub("::", "_")}-retry"
-        end
-
+        attr_reader :work_exchange, :step_class, :interval
       end
 
     end

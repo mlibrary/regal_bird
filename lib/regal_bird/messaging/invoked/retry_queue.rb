@@ -1,13 +1,21 @@
+require "regal_bird/messaging/queue"
+
 module RegalBird
   module Messaging
     module Invoked
 
-      class RetryQueue
+      class RetryQueue < Queue
 
         def initialize(channel, work_exchange, retry_exchange, ttl)
+          @channel = channel
+          @work_exchange = work_exchange
+          @retry_exchange = retry_exchange
           @ttl = ttl
-          @queue = channel.queue(
-            name,
+          super(channel, retry_exchange)
+        end
+
+        def channel_opts
+          {
             exclusive: false,
             auto_delete: true,
             durable: false,
@@ -16,8 +24,15 @@ module RegalBird
               "x-message-ttl" => ttl * 1000,
               "x-expires" => ttl * 2 * 1000
             }
-          )
-          @queue.bind(retry_exchange, arguments: route.merge({ "x-match" => "all" }))
+          }
+        end
+
+        def bind_opts
+          { arguments: route.merge({ "x-match" => "all" }) }
+        end
+
+        def name
+          "action-retry-#{ttl}"
         end
 
         def route
@@ -25,12 +40,7 @@ module RegalBird
         end
 
         private
-        attr_reader :ttl
-
-        def name
-          "action-retry-#{ttl}"
-        end
-
+        attr_reader :work_exchange, :ttl
       end
 
     end
