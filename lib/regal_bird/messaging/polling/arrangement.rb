@@ -29,8 +29,8 @@ module RegalBird
 
         def initial_message
           Message.new(
-            { routing_key: @work_queue.routing_key },
-            { headers: @retry_queue.binding },
+            @work_queue.route,
+            { headers: @retry_queue.route },
             RegalBird::Event.new(
               item_id: @step_class.to_s,
               emitter: @step_class,

@@ -33,5 +33,11 @@ RSpec.describe RegalBird::Messaging::Polling::WorkQueue do
     end
   end
 
+  describe "#route" do
+    it "returns { routing_key: key }" do
+      expect(subject.route).to eql({routing_key: routing_key})
+    end
+  end
+
 
 end

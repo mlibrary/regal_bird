@@ -2,7 +2,7 @@ require "regal_bird/messaging/invoked/work_queue"
 
 RSpec.describe RegalBird::Messaging::Invoked::WorkQueue do
   let(:queue) { double(:queue, bind: nil) }
-  let(:channel) { double(:channel, queue: queue) }
+  let(:channel) { double(:channel, queue: queue, ack: nil) }
   let(:work_exchange) { double(:work_exchange) }
   let(:step_class) { described_class }
   let(:routing_key) { "sometest.routing.key" }
@@ -27,10 +27,15 @@ RSpec.describe RegalBird::Messaging::Invoked::WorkQueue do
   describe "#ack" do
     let(:delivery_tag) { :some_tag }
     it "acks exactly one message" do
-      expect(queue).to receive(:ack).with(delivery_tag, false)
+      expect(channel).to receive(:ack).with(delivery_tag, false)
       subject.ack(delivery_tag)
     end
   end
 
+  describe "#route" do
+    it "returns {routing_key: key}" do
+      expect(subject.route).to eql({routing_key: routing_key})
+    end
+  end
 
 end

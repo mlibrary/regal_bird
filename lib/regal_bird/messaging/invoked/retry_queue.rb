@@ -17,10 +17,10 @@ module RegalBird
               "x-expires" => ttl * 2 * 1000
             }
           )
-          @queue.bind(retry_exchange, arguments: binding.merge({ "x-match" => "all" }))
+          @queue.bind(retry_exchange, arguments: route.merge({ "x-match" => "all" }))
         end
 
-        def binding
+        def route
           { "retry-wait" => ttl }
         end
 

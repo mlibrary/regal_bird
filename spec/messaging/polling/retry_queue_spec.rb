@@ -32,9 +32,9 @@ RSpec.describe RegalBird::Messaging::Polling::RetryQueue do
     end
   end
 
-  describe "#binding" do
+  describe "#route" do
     it "binds on the source" do
-      expect(subject.binding).to eql({"source" => step_class.to_s})
+      expect(subject.route).to eql({"source" => step_class.to_s})
     end
   end
 

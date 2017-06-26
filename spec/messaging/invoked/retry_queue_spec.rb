@@ -31,9 +31,9 @@ RSpec.describe RegalBird::Messaging::Invoked::RetryQueue do
     end
   end
 
-  describe "#binding" do
+  describe "#route" do
     it "binds on the ttl" do
-      expect(subject.binding).to eql({"retry-wait" => ttl})
+      expect(subject.route).to eql({"retry-wait" => ttl})
     end
   end
 

@@ -18,11 +18,11 @@ module RegalBird
             }
           )
           @queue.bind(retry_exchange,
-            arguments: binding.merge({"x-match" => "all"})
+            arguments: route.merge({"x-match" => "all"})
           )
         end
 
-        def binding
+        def route
           { "source" => step_class.to_s }
         end
 

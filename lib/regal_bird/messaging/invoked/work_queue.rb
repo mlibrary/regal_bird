@@ -5,7 +5,9 @@ module RegalBird
       class WorkQueue
 
         def initialize(channel, work_exchange, step_class, routing_key)
+          @channel = channel
           @step_class = step_class
+          @routing_key = routing_key
           @queue = channel.queue(
             name,
             exclusive: false,
@@ -16,15 +18,19 @@ module RegalBird
         end
 
         def ack(delivery_tag)
-          @queue.ack(delivery_tag, false)
+          @channel.ack(delivery_tag, false)
         end
 
-        private
-        attr_reader :step_class
+        def route
+          {routing_key: routing_key}
+        end
 
         def name
           "action-#{step_class.to_s.downcase.gsub("::", "_")}-work"
         end
+
+        private
+        attr_reader :step_class, :routing_key
 
       end
 

@@ -4,8 +4,6 @@ module RegalBird
 
       class WorkQueue < SimpleDelegator
 
-        attr_reader :routing_key
-
         def initialize(channel, work_exchange, step_class, routing_key)
           @channel = channel
           @step_class = step_class
@@ -31,8 +29,12 @@ module RegalBird
           "source-#{step_class.to_s.downcase.gsub("::", "_")}-work"
         end
 
+        def route
+          {routing_key: routing_key}
+        end
+
         private
-        attr_reader :step_class
+        attr_reader :step_class, :routing_key
       end
 
     end

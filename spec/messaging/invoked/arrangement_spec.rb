@@ -13,7 +13,7 @@ RSpec.describe RegalBird::Messaging::Invoked::Arrangement do
   let(:arrangement) { described_class.new(channel, work_exchange, retry_exchange, step_class, state, num_workers) }
 
   let(:publisher) { double(:publisher, success: nil, retry: nil) }
-  let(:retry_queue) { double(:retry_queue, binding: "foo") }
+  let(:retry_queue) { double(:retry_queue, route: "foo") }
   let(:work_queue) { double(:work_queue) }
 
   before(:each) do
