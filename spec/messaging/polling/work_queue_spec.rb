@@ -28,7 +28,7 @@ RSpec.describe RegalBird::Messaging::Polling::WorkQueue do
   describe "#ack" do
     let(:delivery_tag) { :some_tag }
     it "acks exactly one message" do
-      expect(queue).to receive(:ack).with(delivery_tag, false)
+      expect(channel).to receive(:ack).with(delivery_tag, false)
       subject.ack(delivery_tag)
     end
   end

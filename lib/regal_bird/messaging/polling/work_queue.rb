@@ -2,10 +2,14 @@ module RegalBird
   module Messaging
     module Polling
 
-      class WorkQueue
+      class WorkQueue < SimpleDelegator
+
+        attr_reader :routing_key
 
         def initialize(channel, work_exchange, step_class, routing_key)
+          @channel = channel
           @step_class = step_class
+          @routing_key = routing_key
           @queue = channel.queue(
             name,
             exclusive: false,
@@ -16,19 +20,19 @@ module RegalBird
             }
           )
           @queue.bind(work_exchange, routing_key: routing_key)
+          __setobj__ @queue
         end
 
         def ack(delivery_tag)
-          @queue.ack(delivery_tag, false)
+          @channel.ack(delivery_tag, false)
         end
-
-        private
-        attr_reader :step_class
 
         def name
           "source-#{step_class.to_s.downcase.gsub("::", "_")}-work"
         end
 
+        private
+        attr_reader :step_class
       end
 
     end
