@@ -28,14 +28,18 @@ module RegalBird
         private
 
         def initial_message
-          Message.new({}, { headers: @retry_queue.binding }, RegalBird::Event.new(
-            item_id: @step_class.to_s,
-            emitter: @step_class,
-            state: :source,
-            data: {},
-            start_time: Time.at(0),
-            end_time: Time.at(0)
-          ))
+          Message.new(
+            { routing_key: @work_queue.routing_key },
+            { headers: @retry_queue.binding },
+            RegalBird::Event.new(
+              item_id: @step_class.to_s,
+              emitter: @step_class,
+              state: :source,
+              data: {},
+              start_time: Time.at(0),
+              end_time: Time.at(0)
+            )
+          )
         end
       end
 

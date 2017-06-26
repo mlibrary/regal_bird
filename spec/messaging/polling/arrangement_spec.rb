@@ -15,7 +15,7 @@ RSpec.describe RegalBird::Messaging::Polling::Arrangement do
   let(:consumer) { double(:consumer) }
   let(:publisher) { double(:publisher, success: nil, retry: nil) }
   let(:retry_queue) { double(:retry_queue, binding: "foo") }
-  let(:work_queue) { double(:work_queue) }
+  let(:work_queue) { double(:work_queue, routing_key: "foobar" ) }
 
   before(:each) do
     allow(RegalBird::Messaging::Polling::Consumer).to receive(:new).and_return(consumer)
@@ -56,7 +56,7 @@ RSpec.describe RegalBird::Messaging::Polling::Arrangement do
     it "retries the initial message" do
       expect(publisher).to receive(:retry).with(
         RegalBird::Messaging::Message.new(
-          Hash.new,
+          { routing_key: work_queue.routing_key },
           { headers: retry_queue.binding },
           RegalBird::Event.new(
             item_id: step_class.to_s,
