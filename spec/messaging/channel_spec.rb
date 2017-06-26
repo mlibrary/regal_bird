@@ -1,5 +1,4 @@
 require "regal_bird/messaging/channel"
-require "bunny"
 
 RSpec.describe RegalBird::Messaging::Channel do
   let(:backend_channel) { double(:backend_channel, prefetch: nil) }

@@ -1,3 +1,5 @@
+require "bunny"
+
 module RegalBird
   module Messaging
 
