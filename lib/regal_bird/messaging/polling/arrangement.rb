@@ -25,6 +25,11 @@ module RegalBird
           @publisher.retry(initial_message)
         end
 
+        def delete
+          @work_queue.delete
+          @retry_queue.delete
+        end
+
         private
 
         def initial_message
