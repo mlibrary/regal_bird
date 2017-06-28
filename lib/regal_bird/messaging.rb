@@ -7,6 +7,7 @@ require "regal_bird/messaging/retry_exchange"
 require "regal_bird/messaging/steward"
 require "regal_bird/messaging/invoked"
 require "regal_bird/messaging/polling"
+require "regal_bird/messaging/logging"
 
 module RegalBird
   module Messaging
