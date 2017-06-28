@@ -59,7 +59,7 @@ then you likely want to separate them into their own plans.
 Your plan file should look something like this:
 
 ```ruby
-RegalBird::Plan.define do
+RegalBird::Plan.define("name_of_my_plan") do
   source MyDomain::MyFirstSource, 30
   source MyDomain::MyDailySource, 60*60*24
 end
@@ -81,7 +81,7 @@ many-to-one mapping, but note that such branching plans can be complex.
 Your plan file should look something like this:
 
 ```ruby
-RegalBird::Plan.define do
+RegalBird::Plan.define("cool_plan") do
   # sources
   action :ready,  MyDomain::FooAction, 1
   action :set,    MyDomain::BarAction, 1
@@ -106,7 +106,7 @@ when a unit is in a failed state, it may be useful to represent that.  Your plan
 look like this:
 
 ```ruby
-RegalBird::Plan.define do
+RegalBird::Plan.define("foo") do
   # sources...
   # other actions...
   action :cancelled,      MyDomain::LogCancel,      1
@@ -120,7 +120,7 @@ Here's a simple plan (that I've intentionally overcomplicated) that emails a
 newsletter and sends a Twitter message each day.
 
 ```ruby
-RegalBird::Plan.define do
+RegalBird::Plan.define("newsletter_with_twitter") do
   source CoolBlog::Newsletter::GetUsers, 60 * 60 * 24
   action :ready,      CoolBlog::Newsletter::SendEmail,        1
   action :no_email,   RegalBird::Action::Clean,               1
