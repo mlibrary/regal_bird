@@ -8,6 +8,21 @@ RSpec.describe RegalBird::Plan do
     end
   end
 
+  describe "#define" do
+    it "sets the name" do
+      plan = described_class.define("foo"){}
+      expect(plan.name).to eql("foo")
+    end
+  end
+
+  describe "#logger=" do
+    let(:logger) { double(:logger) }
+    it "sets the logger" do
+      empty_plan.logger = logger
+      expect(empty_plan.logger).to eql(logger)
+    end
+  end
+
   describe "#add_action_declaration" do
     let(:declaration) { RegalBird::Plan::ActionDeclaration.new(Fixnum, :ready, 5) }
     it "adds the action" do

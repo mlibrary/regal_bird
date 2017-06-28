@@ -1,3 +1,4 @@
+require "regal_bird/plan_dsl"
 
 module RegalBird
 
@@ -7,12 +8,14 @@ module RegalBird
     SourceDeclaration = Struct.new(:klass, :interval)
 
     attr_reader :name, :actions, :sources
+    attr_accessor :logger
 
     # @param name [String,Symbol]
     def initialize(name)
       @name = name
       @actions = []
       @sources = []
+      @logger = nil
     end
 
     def add_source_declaration(declaration)
@@ -41,6 +44,13 @@ module RegalBird
         sources == other.sources
     end
     alias_method :==, :eql?
+
+    def self.define(name, &block)
+      plan = new(name)
+      dsl = PlanDSL.new(plan)
+      dsl.instance_eval(&block)
+      plan
+    end
 
   end
 
