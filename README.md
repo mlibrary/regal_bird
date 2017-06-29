@@ -251,6 +251,14 @@ two other convenience methods that can be used within `#wrap_execution`:
 * `#noop` for when the action succeeded, but the state did not change.  This is useful
   for checking if an external service has completed an operation.
 
+# Running Regal Bird
+
+As mentioned in the configuration section, Regal Bird provides rake tasks to run its
+workers. This infrastructure is persistent, and will survive restarts of both
+Regal Bird and rabbitmq-server. As such, when you want to delete all *or part of* a
+plan, you should be sure to invoke the `purge[path_to_plan]` rake task, but please
+note that this will delete *all* state information currently in the plan.
+
 ## More Information
 
 This readme covers most of the functionality, but not all of it.  For that, please
