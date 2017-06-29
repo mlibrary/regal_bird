@@ -110,10 +110,11 @@ Unfortunately, Regal Bird does not support shared workers or worker pools at thi
 
 ### Part 3: Declaring Terminal States
 
-It's likely that you do not want units that have completed or failed to remain in
-Regal Bird's docket.  A special action is provided that will remove a unit,
-`RegalBird::Action::Clean`.  Please note that if you wish to do something useful
-when a unit is in a failed state, it may be useful to represent that.  Your plan might
+Units that have completed or reached some other terminal state do not remain in
+Regal Bird's docket.  A special action is provided to add clarity to terminal states
+in plan definitions, `RegalBird::Action::Clean`. *Never subclass
+RegalBird::Action::Clean.* If you wish to do something useful when a unit is in a
+failed (or other terminal) state, it may be useful to represent that. Your plan might
 look like this:
 
 ```ruby
