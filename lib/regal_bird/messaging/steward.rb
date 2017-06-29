@@ -12,6 +12,7 @@ module RegalBird
         @plan = plan
         @sources = []
         @actions = []
+        @log = nil
       end
 
       # Create the exchanges, queues, and consumers as described
@@ -30,6 +31,7 @@ module RegalBird
             action_declaration.num_workers
           )
         end
+        log = Logging::Arrangement.new(channel, work_exchange, plan.logger)
       end
 
       def delete
@@ -50,7 +52,7 @@ module RegalBird
       end
 
       attr_reader :channel, :plan
-
+      attr_accessor :actions, :log, :sources
     end
 
   end
