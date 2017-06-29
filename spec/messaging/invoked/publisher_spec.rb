@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/invoked/publisher"
 require "regal_bird/messaging/invoked/retry_queue"
 require "regal_bird/messaging/event_serializer"
@@ -10,11 +12,11 @@ RSpec.describe RegalBird::Messaging::Invoked::Publisher do
   let(:event_opts) do
     {
       item_id: "derp", emitter: "test", state: :ready,
-      data: { some: "data", more: [1,2,3] },
+      data: { some: "data", more: [1, 2, 3] },
       start_time: Time.at(0), end_time: Time.now
     }
   end
-  let(:event) { RegalBird::Event.new(event_opts)}
+  let(:event) { RegalBird::Event.new(event_opts) }
   let(:json) { RegalBird::Messaging::EventSerializer.serialize(event) }
   let(:err_msg) { "some_error_msg" }
 
@@ -26,9 +28,8 @@ RSpec.describe RegalBird::Messaging::Invoked::Publisher do
     let(:message) do
       double(:message,
         routing_key: "some_routing_key",
-        headers: { some: { header: "data" }},
-        event: event
-      )
+        headers: { some: { header: "data" } },
+        event: event)
     end
     it "creates a retry queue for the new ttl" do
       expect(RegalBird::Messaging::Invoked::RetryQueue).to receive(:new).with(
@@ -42,13 +43,9 @@ RSpec.describe RegalBird::Messaging::Invoked::Publisher do
     it "publishes to the retry exchange" do
       expect(retry_exchange).to receive(:publish).with(
         json,
-        {
-          routing_key: message.routing_key,
-          headers: message.headers.merge({
-            "retry-wait" => message.headers.fetch("retry-wait", 1) * 2,
-            "error" => err_msg
-          })
-        }
+        routing_key: message.routing_key,
+headers: message.headers.merge("retry-wait" => message.headers.fetch("retry-wait", 1) * 2,
+  "error" => err_msg)
       )
       publisher.retry(message, err_msg)
     end
@@ -58,10 +55,9 @@ RSpec.describe RegalBird::Messaging::Invoked::Publisher do
     it "publishes to the work exchange" do
       expect(work_exchange).to receive(:publish).with(
         json,
-        { routing_key: "action.#{event_opts[:state].to_s}"}
+        routing_key: "action.#{event_opts[:state]}"
       )
       publisher.success(event)
     end
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/configuration"
 require "regal_bird/version"
 require "regal_bird/action"
@@ -12,9 +14,7 @@ module RegalBird
       @config ||= Configuration.new
     end
 
-    def config=(obj)
-      @config = obj
-    end
+    attr_writer :config
 
     def add_steward(steward)
       @stewards ||= {}

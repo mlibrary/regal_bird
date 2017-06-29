@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require "regal_bird/messaging/event_serializer"
+
 module RegalBird
   module Messaging
     module Polling
@@ -25,6 +29,7 @@ module RegalBird
         end
 
         private
+
         attr_reader :work_exchange, :retry_exchange
 
       end

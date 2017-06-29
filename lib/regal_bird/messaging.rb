@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/channel"
 require "regal_bird/messaging/event_serializer"
 require "regal_bird/messaging/message"
@@ -14,4 +16,3 @@ module RegalBird
 
   end
 end
-

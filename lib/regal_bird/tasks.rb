@@ -1,25 +1,26 @@
-namespace :regal_bird do
+# frozen_string_literal: true
 
+namespace :regal_bird do
   desc "Configure Regal Bird. See README"
   task :setup
 
-  task :prepare => [:setup] do
+  task prepare: [:setup] do
     require "regal_bird"
   end
 
-  task :channel => [:prepare] do
+  task channel: [:prepare] do
     @channel ||= RegalBird::Messaging::Channel.new
   end
 
   desc "Start all plans"
-  task :start => [:prepare, :channel] do
+  task start: [:prepare, :channel] do
     Dir[RegalBird.config.plan_dir + "**" + "*.rb"].each do |path|
       Rake::Task["plan:start"].execute(path)
     end
   end
 
   desc "Purge all plans"
-  task :purge => [:prepare, :channel] do
+  task purge: [:prepare, :channel] do
     Dir[RegalBird.config.plan_dir + "**" + "*.rb"].each do |path|
       Rake::Task["plan:purge"].execute(path)
     end
@@ -43,5 +44,4 @@ namespace :regal_bird do
       File.rename args[:path], args[:path] + ".purged"
     end
   end
-
 end

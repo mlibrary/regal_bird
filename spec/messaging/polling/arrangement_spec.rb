@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/polling/arrangement"
 require "regal_bird/messaging/polling/consumer"
 require "regal_bird/messaging/polling/publisher"
@@ -8,7 +10,7 @@ RSpec.describe RegalBird::Messaging::Polling::Arrangement do
   let(:channel) { double(:channel) }
   let(:work_exchange) { double(:work_exchange) }
   let(:retry_exchange) { double(:retry_exchange) }
-  let(:step_class) { Fixnum }
+  let(:step_class) { Integer }
   let(:interval) { 30 }
   let(:arrangement) { described_class.new(channel, work_exchange, retry_exchange, step_class, interval) }
 
@@ -48,7 +50,7 @@ RSpec.describe RegalBird::Messaging::Polling::Arrangement do
 
     it "creates a WorkQueue" do
       expect(RegalBird::Messaging::Polling::WorkQueue).to receive(:new).with(
-        channel, work_exchange, step_class, "source.#{step_class.to_s}"
+        channel, work_exchange, step_class, "source.#{step_class}"
       )
       arrangement
     end
@@ -70,8 +72,5 @@ RSpec.describe RegalBird::Messaging::Polling::Arrangement do
       )
       arrangement
     end
-
-
-
   end
 end

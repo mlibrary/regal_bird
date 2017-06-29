@@ -1,4 +1,5 @@
-require "securerandom"
+# frozen_string_literal: true
+
 require "regal_bird/event"
 
 module RegalBird
@@ -7,6 +8,9 @@ module RegalBird
   # associated state in the plan. They receive and emit an
   # Event.
   class Action
+    class Clean < Action
+      def execute; end
+    end
 
     attr_reader :event
 
@@ -21,37 +25,35 @@ module RegalBird
     end
 
     def success(state, data)
-      {state: state, data: data}
+      { state: state, data: data }
     end
 
     def noop
-      {state: event.state, data: {}}
+      { state: event.state, data: {} }
     end
 
     def failure(message)
-      {state: event.state, data: {error: message}}
+      { state: event.state, data: { error: message } }
     end
 
     def wrap_execution
       start_time = Time.now.utc
       begin
         result = yield
-        RegalBird::Event.new(item_id: event.item_id, state: result[:state],
-          emitter: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
-          data: event.data.merge(result[:data])
-        )
+        new_event(result[:state], start_time, event.data.merge(result[:data]))
       rescue StandardError => e
-        RegalBird::Event.new(item_id: event.item_id, state: event_log.state,
-          emitter: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
-          data: {error: "#{e.message}\n#{e.backtrace}"}
-        )
+        new_event(event.state, start_time, error: "#{e.message}\n#{e.backtrace}")
       end
     end
 
-  end
+    private
 
-  class Action::Clean < Action
-    def execute; end
+    def new_event(state, start_time, data)
+      RegalBird::Event.new(item_id: event.item_id, state: state,
+        emitter: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
+        data: data)
+    end
+
   end
 
 end

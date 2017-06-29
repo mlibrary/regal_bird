@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/queue"
 
 module RegalBird
@@ -16,19 +18,19 @@ module RegalBird
 
         def channel_opts
           {
-            exclusive: false,
+            exclusive:   false,
             auto_delete: true,
-            durable: false,
-            arguments: {
+            durable:     false,
+            arguments:   {
               "x-dead-letter-exchange" => work_exchange.name,
-              "x-message-ttl" => ttl * 1000,
-              "x-expires" => ttl * 2 * 1000
+              "x-message-ttl"          => ttl * 1000,
+              "x-expires"              => ttl * 2 * 1000
             }
           }
         end
 
         def bind_opts
-          { arguments: route.merge({ "x-match" => "all" }) }
+          { arguments: route.merge("x-match" => "all") }
         end
 
         def name
@@ -40,6 +42,7 @@ module RegalBird
         end
 
         private
+
         attr_reader :work_exchange, :ttl
       end
 

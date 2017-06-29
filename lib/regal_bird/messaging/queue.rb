@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RegalBird
   module Messaging
 
@@ -26,6 +28,7 @@ module RegalBird
       end
 
       private
+
       attr_reader :channel, :queue
     end
 

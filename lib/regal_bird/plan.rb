@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require "regal_bird/plan_dsl"
+require "regal_bird/action"
 
 module RegalBird
 
@@ -56,7 +59,4 @@ module RegalBird
 
   end
 
-
-
 end
-

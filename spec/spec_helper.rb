@@ -1,6 +1,9 @@
-$: << File.expand_path(File.join(File.dirname(__FILE__), "../lib/regal_bird"))
+# frozen_string_literal: true
 
-Dir[File.expand_path(File.join(File.dirname(__FILE__),'support','**','*.rb'))].each {|f| require f}
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), "../lib/regal_bird"))
+
+Dir[File.expand_path(File.join(File.dirname(__FILE__), "support", "**", "*.rb"))]
+  .each {|f| require f }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -16,7 +19,6 @@ RSpec.configure do |config|
   config.warnings = false
 
   if config.files_to_run.one?
-    config.default_formatter = 'doc'
+    config.default_formatter = "doc"
   end
-
 end

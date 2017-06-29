@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/invoked/consumer"
 
 class TestError < StandardError; end
@@ -8,8 +10,7 @@ RSpec.describe RegalBird::Messaging::Invoked::Consumer do
       name: "test-queue-name",
       consumer_count: 3,
       subscribe: nil,
-      ack: nil
-    )
+      ack: nil)
   end
   let(:publisher) { double(:publisher, retry: nil, success: nil) }
   let(:step_class) { double(:step_class, new: step) }
@@ -38,15 +39,13 @@ RSpec.describe RegalBird::Messaging::Invoked::Consumer do
     end
 
     it "subscribes with a block that calls #perform"
-
   end
 
   describe "#perform" do
     let(:message) do
       double(:message,
         delivery_tag: "some_delivery_tag",
-        event: double(:event)
-      )
+        event: double(:event))
     end
 
     it "executes the step_class with the event" do
@@ -82,7 +81,5 @@ RSpec.describe RegalBird::Messaging::Invoked::Consumer do
         subject.perform(message)
       end
     end
-
   end
-
 end

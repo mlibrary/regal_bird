@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require "json"
+require "regal_bird/event"
 
 module RegalBird
   module Messaging
@@ -8,14 +11,12 @@ module RegalBird
       # @param event [RegalBird::Event]
       # @return [String] JSON-encoded string
       def self.serialize(event)
-        JSON.generate({
-          item_id: event.item_id,
+        JSON.generate(item_id: event.item_id,
           emitter: event.emitter,
           state: event.state,
           data: event.data,
           start_time: event.start_time.iso8601(9),
-          end_time: event.end_time.iso8601(9)
-        })
+          end_time: event.end_time.iso8601(9))
       end
 
       def self.deserialize(string)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/queue"
 
 module RegalBird
@@ -16,9 +18,9 @@ module RegalBird
 
         def channel_opts
           {
-            exclusive: false,
+            exclusive:   false,
             auto_delete: false,
-            durable: true
+            durable:     true
           }
         end
 
@@ -31,10 +33,11 @@ module RegalBird
         end
 
         def route
-          {routing_key: routing_key}
+          { routing_key: routing_key }
         end
 
         private
+
         attr_reader :step_class, :routing_key
       end
 

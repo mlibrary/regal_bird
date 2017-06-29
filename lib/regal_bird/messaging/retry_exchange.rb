@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RegalBird
   module Messaging
 
@@ -5,8 +7,7 @@ module RegalBird
       def initialize(name, channel)
         @exchange = channel.headers(name,
           durable: true,
-          auto_delete: false
-        )
+          auto_delete: false)
         @channel = channel
         __setobj__(@exchange)
       end

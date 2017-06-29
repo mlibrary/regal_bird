@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/polling/work_queue"
 
 RSpec.describe RegalBird::Messaging::Polling::WorkQueue do
@@ -12,15 +14,13 @@ RSpec.describe RegalBird::Messaging::Polling::WorkQueue do
   describe "#new" do
     it "initializes a non-exclusive, durable, length=1 queue" do
       expect(channel).to receive(:queue)
-        .with(queue_name, {
-        exclusive: false, auto_delete: false, durable: true,
-        arguments: { "x-max-length" => 1 }
-      })
+        .with(queue_name,           exclusive: false, auto_delete: false, durable: true,
+        arguments: { "x-max-length" => 1 })
       subject
     end
 
     it "binds the queue to the exchange" do
-      expect(queue).to receive(:bind).with(work_exchange, {routing_key: routing_key} )
+      expect(queue).to receive(:bind).with(work_exchange, routing_key: routing_key)
       subject
     end
   end
@@ -35,9 +35,7 @@ RSpec.describe RegalBird::Messaging::Polling::WorkQueue do
 
   describe "#route" do
     it "returns { routing_key: key }" do
-      expect(subject.route).to eql({routing_key: routing_key})
+      expect(subject.route).to eql(routing_key: routing_key)
     end
   end
-
-
 end

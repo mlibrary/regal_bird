@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/invoked/arrangement"
 require "regal_bird/messaging/invoked/consumer"
 require "regal_bird/messaging/invoked/publisher"
@@ -7,7 +9,7 @@ RSpec.describe RegalBird::Messaging::Invoked::Arrangement do
   let(:channel) { double(:channel) }
   let(:work_exchange) { double(:work_exchange) }
   let(:retry_exchange) { double(:retry_exchange) }
-  let(:step_class) { Fixnum }
+  let(:step_class) { Integer }
   let(:state) { :some_state }
   let(:num_workers) { rand(1..5) }
   let(:arrangement) { described_class.new(channel, work_exchange, retry_exchange, step_class, state, num_workers) }
@@ -38,9 +40,8 @@ RSpec.describe RegalBird::Messaging::Invoked::Arrangement do
 
     it "creates a WorkQueue" do
       expect(RegalBird::Messaging::Invoked::WorkQueue).to receive(:new)
-        .with(channel, work_exchange, step_class, "action.#{state.to_s}")
+        .with(channel, work_exchange, step_class, "action.#{state}")
       arrangement
     end
-
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/retry_exchange"
 
 RSpec.describe RegalBird::Messaging::RetryExchange do
@@ -6,13 +8,12 @@ RSpec.describe RegalBird::Messaging::RetryExchange do
   let(:channel) do
     double(:channel,
       queue: double(:queue),
-      headers: backend_exchange
-    )
+      headers: backend_exchange)
   end
 
   it "initializes a durable headers exchange" do
     expect(channel).to receive(:headers)
-      .with(name, { durable: true, auto_delete: false})
+      .with(name, durable: true, auto_delete: false)
     described_class.new(name, channel)
   end
 
@@ -21,5 +22,4 @@ RSpec.describe RegalBird::Messaging::RetryExchange do
     expect(backend_exchange).to receive(:foo).with(5)
     described_class.new(name, channel).foo(5)
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird"
 
 RSpec.describe RegalBird do
@@ -13,14 +15,12 @@ RSpec.describe RegalBird do
   end
 
   describe "::add_steward and ::emit" do
-    let(:event) { double(:event)}
+    let(:event) { double(:event) }
     let(:steward) do
       double(:steward,
         emit: nil,
         plan: double(:plan,
-          name: "foo"
-        )
-      )
+          name: "foo"))
     end
     it "adds a steward for emit" do
       described_class.add_steward(steward)
@@ -28,5 +28,4 @@ RSpec.describe RegalBird do
       expect(steward).to have_received(:emit).with(event)
     end
   end
-
 end

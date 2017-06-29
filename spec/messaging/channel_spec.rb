@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/channel"
 
 RSpec.describe RegalBird::Messaging::Channel do
@@ -31,6 +33,4 @@ RSpec.describe RegalBird::Messaging::Channel do
     expect(backend_channel).to receive(:foo).with(5)
     described_class.new.foo(5)
   end
-
-
 end

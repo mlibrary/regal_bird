@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/queue"
 
 module RegalBird
@@ -14,9 +16,9 @@ module RegalBird
 
         def channel_opts
           {
-            exclusive: false,
+            exclusive:   false,
             auto_delete: false,
-            durable: true
+            durable:     true
           }
         end
 
@@ -30,7 +32,7 @@ module RegalBird
 
         # The route, which matches all routing keys.
         def route
-          {routing_key: "#" }
+          { routing_key: "#" }
         end
       end
 

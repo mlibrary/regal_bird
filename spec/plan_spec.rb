@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/plan"
 
 RSpec.describe RegalBird::Plan do
@@ -10,7 +12,7 @@ RSpec.describe RegalBird::Plan do
 
   describe "#define" do
     it "sets the name" do
-      plan = described_class.define("foo"){}
+      plan = described_class.define("foo") {}
       expect(plan.name).to eql("foo")
     end
   end
@@ -24,7 +26,7 @@ RSpec.describe RegalBird::Plan do
   end
 
   describe "#add_action_declaration" do
-    let(:declaration) { RegalBird::Plan::ActionDeclaration.new(Fixnum, :ready, 5) }
+    let(:declaration) { RegalBird::Plan::ActionDeclaration.new(Integer, :ready, 5) }
     let(:clean_decl) { RegalBird::Plan::ActionDeclaration.new(RegalBird::Action::Clean, :foo, 1) }
     it "adds the action" do
       expect { empty_plan.add_action_declaration(declaration) }
@@ -42,15 +44,15 @@ RSpec.describe RegalBird::Plan do
   end
 
   describe "#add_action" do
-    let(:declaration) { RegalBird::Plan::ActionDeclaration.new(Fixnum, :ready, 5) }
+    let(:declaration) { RegalBird::Plan::ActionDeclaration.new(Integer, :ready, 5) }
     it "adds the action" do
-      expect { empty_plan.add_action(Fixnum, :ready, 5) }
+      expect { empty_plan.add_action(Integer, :ready, 5) }
         .to change { empty_plan.actions }
         .from([])
         .to([declaration])
     end
     it "returns self" do
-      expect(empty_plan.add_action(Fixnum, :ready, 5)).to eql(empty_plan)
+      expect(empty_plan.add_action(Integer, :ready, 5)).to eql(empty_plan)
     end
     it "does not add Action::Clean" do
       expect { empty_plan.add_action(RegalBird::Action::Clean, :foo, 1) }
@@ -59,7 +61,7 @@ RSpec.describe RegalBird::Plan do
   end
 
   describe "#add_source_declaration" do
-    let(:declaration) { RegalBird::Plan::SourceDeclaration.new(Fixnum, 60) }
+    let(:declaration) { RegalBird::Plan::SourceDeclaration.new(Integer, 60) }
     it "adds the source" do
       expect { empty_plan.add_source_declaration(declaration) }
         .to change { empty_plan.sources }
@@ -72,37 +74,37 @@ RSpec.describe RegalBird::Plan do
   end
 
   describe "#add_source" do
-    let(:declaration) { RegalBird::Plan::SourceDeclaration.new(Fixnum, 60) }
+    let(:declaration) { RegalBird::Plan::SourceDeclaration.new(Integer, 60) }
     it "adds the action" do
-      expect { empty_plan.add_source(Fixnum, 60) }
+      expect { empty_plan.add_source(Integer, 60) }
         .to change { empty_plan.sources }
         .from([])
         .to([declaration])
     end
     it "returns self" do
-      expect(empty_plan.add_source(Fixnum, 60)).to eql(empty_plan)
+      expect(empty_plan.add_source(Integer, 60)).to eql(empty_plan)
     end
   end
 
   describe "#eql?" do
     let(:foo_a_b) do
       described_class.new("foo")
-        .add_source(Fixnum, 45)
+        .add_source(Integer, 45)
         .add_action(String, :ready, 5)
     end
     let(:foo_b_a) do
       described_class.new("foo")
         .add_action(String, :ready, 5)
-        .add_source(Fixnum, 45)
+        .add_source(Integer, 45)
     end
     let(:bar_a_b) do
       described_class.new("bar")
         .add_action(String, :ready, 5)
-        .add_source(Fixnum, 45)
+        .add_source(Integer, 45)
     end
     let(:foo_a_b_c) do
       described_class.new("foo")
-        .add_source(Fixnum, 45)
+        .add_source(Integer, 45)
         .add_action(String, :ready, 5)
         .add_action(Hash, :done, 5)
     end
@@ -119,5 +121,4 @@ RSpec.describe RegalBird::Plan do
       expect(foo_a_b == foo_a_b_c).to be false
     end
   end
-
 end

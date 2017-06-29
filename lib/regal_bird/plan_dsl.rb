@@ -1,4 +1,6 @@
 
+# frozen_string_literal: true
+
 module RegalBird
 
   class PlanDSL < SimpleDelegator
@@ -14,8 +16,6 @@ module RegalBird
     def logger(new_logger)
       self.logger = new_logger
     end
-
-
 
   end
 

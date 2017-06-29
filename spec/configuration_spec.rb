@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/configuration"
 require "pathname"
 
@@ -16,7 +18,7 @@ RSpec.describe RegalBird::Configuration do
     it "accepts Pathnames" do
       expect { config.plan_dir = Pathname.pwd }
         .to change { config.plan_dir }
-          .to Pathname.pwd
+        .to Pathname.pwd
     end
   end
 
@@ -33,5 +35,4 @@ RSpec.describe RegalBird::Configuration do
       .to change { config.foo }
       .from(nil).to(:bar)
   end
-
 end

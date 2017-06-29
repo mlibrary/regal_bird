@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/polling/retry_queue"
 
 RSpec.describe RegalBird::Messaging::Polling::RetryQueue do
@@ -14,28 +16,25 @@ RSpec.describe RegalBird::Messaging::Polling::RetryQueue do
   describe "#new" do
     it "initializes a non-exclusive, durable, dlx, size==1 queue" do
       expect(channel).to receive(:queue)
-        .with(queue_name, {
-        exclusive: false, auto_delete: false, durable: true,
+        .with(queue_name,           exclusive: false, auto_delete: false, durable: true,
         arguments: {
           "x-dead-letter-exchange" => work_exchange.name,
-          "x-message-ttl" => interval * 1000,
-          "x-max-length" => 1
-        }
-      })
+          "x-message-ttl"          => interval * 1000,
+          "x-max-length"           => 1
+        })
       subject
     end
 
     it "binds the queue to the retry exchange on 'source' => step_class.to_s" do
       expect(queue).to receive(:bind)
-        .with(retry_exchange, {arguments: {"x-match" => "all", "source" => step_class.to_s}})
+        .with(retry_exchange, arguments: { "x-match" => "all", "source" => step_class.to_s })
       subject
     end
   end
 
   describe "#route" do
     it "binds on the source" do
-      expect(subject.route).to eql({"source" => step_class.to_s})
+      expect(subject.route).to eql("source" => step_class.to_s)
     end
   end
-
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/retry_exchange"
 require "regal_bird/messaging/work_exchange"
 require "regal_bird/messaging/invoked/arrangement"
@@ -24,21 +26,14 @@ module RegalBird
       # Create the exchanges, queues, and consumers as described
       # by the plan.
       def create_infrastructure!
-        plan.sources.each do |source_declaration|
-          sources << Polling::Arrangement.new(
-            channel, work_exchange, retry_exchange,
-            source_declaration.klass, source_declaration.interval
-          )
+        self.sources = plan.sources.map do |source_declaration|
+          create_source(source_declaration)
         end
-        plan.actions.each do |action_declaration|
-          actions << Invoked::Arrangement.new(
-            channel, work_exchange, retry_exchange,
-            action_declaration.klass, action_declaration.state,
-            action_declaration.num_workers
-          )
+        self.actions = plan.actions.map do |action_declaration|
+          create_action(action_declaration)
         end
-        log = Logging::Arrangement.new(channel, work_exchange, plan.logger)
-        user_event_publisher = Invoked::Publisher.new(work_exchange, nil)
+        self.log = Logging::Arrangement.new(channel, work_exchange, plan.logger)
+        self.user_event_publisher = Invoked::Publisher.new(work_exchange, nil)
       end
 
       def emit(event)
@@ -46,15 +41,31 @@ module RegalBird
       end
 
       def delete
-        sources.each {|s| s.delete }
-        actions.each {|a| a.delete }
+        sources.each(&:delete)
+        actions.each(&:delete)
         retry_exchange.delete
         work_exchange.delete
       end
 
       private
 
-      def retry_exchange
+      def create_source(decl)
+        Polling::Arrangement.new(
+          channel, work_exchange, retry_exchange,
+          decl.klass, decl.interval
+        )
+      end
+
+      def create_action(decl)
+        Invoked::Arrangement.new(
+          channel, work_exchange, retry_exchange,
+          decl.klass, decl.state,
+          decl.num_workers
+        )
+      end
+
+      def
+      def(_retry_exchange)
         @retry_exchange ||= RetryExchange.new("#{plan.name}-retry", channel)
       end
 

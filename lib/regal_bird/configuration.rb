@@ -1,12 +1,13 @@
-require "logger"
-require "yaml"
+# frozen_string_literal: true
+
 require "ostruct"
+require "pathname"
 
 module RegalBird
 
-  class Configuration <  OpenStruct
+  class Configuration < OpenStruct
     DEFAULTS = {
-      plan_dir: nil,
+      plan_dir:   nil,
       connection: nil
     }.freeze
 

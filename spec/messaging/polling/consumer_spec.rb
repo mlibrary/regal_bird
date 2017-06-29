@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/polling/consumer"
 
 RSpec.describe RegalBird::Messaging::Polling::Consumer do
@@ -6,13 +8,12 @@ RSpec.describe RegalBird::Messaging::Polling::Consumer do
       name: "test-queue-name",
       consumer_count: 3,
       subscribe: nil,
-      ack: nil
-    )
+      ack: nil)
   end
   let(:publisher) { double(:publisher, retry: nil, success: nil) }
   let(:step_class) { double(:step_class, new: step) }
   let(:step) { double(:step, execute: events) }
-  let(:events) { [double(:event1), double(:event2) ] }
+  let(:events) { [double(:event1), double(:event2)] }
 
   subject { described_class.new(queue, publisher, step_class) }
 
@@ -36,15 +37,13 @@ RSpec.describe RegalBird::Messaging::Polling::Consumer do
     end
 
     it "subscribes with a block that calls #perform"
-
   end
 
   describe "#perform" do
     let(:message) do
       double(:message,
         delivery_tag: "some_delivery_tag",
-        event: double(:event)
-      )
+        event: double(:event))
     end
 
     it "retries the message" do
@@ -69,8 +68,5 @@ RSpec.describe RegalBird::Messaging::Polling::Consumer do
       end
       subject.perform(message)
     end
-
   end
-
-
 end

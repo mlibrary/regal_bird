@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+
+require "regal_bird/messaging/message"
+require "regal_bird/messaging/event_serializer"
+
 module RegalBird
   module Messaging
     module Logging
@@ -33,13 +38,13 @@ module RegalBird
         def message_to_h(message)
           {
             routing_key: message.routing_key,
-            headers: message.headers,
-            item_id: message.event.item_id,
-            emitter: message.event.emitter,
-            state: message.event.state,
-            start_time: message.event.start_time,
-            end_time: message.event.end_time,
-            data: message.event.data
+            headers:     message.headers,
+            item_id:     message.event.item_id,
+            emitter:     message.event.emitter,
+            state:       message.event.state,
+            start_time:  message.event.start_time,
+            end_time:    message.event.end_time,
+            data:        message.event.data
           }
         end
       end
@@ -47,4 +52,3 @@ module RegalBird
     end
   end
 end
-

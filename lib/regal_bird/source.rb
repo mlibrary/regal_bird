@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/event"
 
 module RegalBird
@@ -14,8 +16,8 @@ module RegalBird
     def success(item_id, state, data)
       {
         item_id: item_id,
-        state: state,
-        data: data
+        state:   state,
+        data:    data
       }
     end
 
@@ -26,8 +28,7 @@ module RegalBird
         results.map do |result|
           RegalBird::Event.new(item_id: result[:item_id], state: result[:state],
             emitter: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
-            data: result[:data]
-          )
+            data: result[:data])
         end
       rescue StandardError => e
         RegalBird.config.logger.error "#{e.message}\n#{e.backtrace}"

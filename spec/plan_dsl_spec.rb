@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/plan"
 require "regal_bird/plan_dsl"
 
@@ -6,9 +8,9 @@ RSpec.describe RegalBird::PlanDSL do
   class TestLogger; end
 
   describe "#source" do
-    let!(:decl) { RegalBird::Plan::SourceDeclaration.new(Fixnum, 85) }
+    let!(:decl) { RegalBird::Plan::SourceDeclaration.new(Integer, 85) }
     it "adds a source declaration" do
-      plan = RegalBird::Plan.define(name) { source Fixnum, 85 }
+      plan = RegalBird::Plan.define(name) { source Integer, 85 }
       expect(plan.sources).to contain_exactly(decl)
     end
   end
@@ -27,5 +29,4 @@ RSpec.describe RegalBird::PlanDSL do
       expect(plan.logger).to be_an_instance_of(TestLogger)
     end
   end
-
 end

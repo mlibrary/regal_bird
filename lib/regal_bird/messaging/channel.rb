@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "bunny"
 
 module RegalBird
@@ -20,7 +22,6 @@ module RegalBird
         @connection
       end
     end
-
 
   end
 end

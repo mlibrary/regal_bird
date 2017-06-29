@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "regal_bird/messaging/message"
 
 RSpec.describe RegalBird::Messaging::Message do
-  let(:delivery_info) {{ delivery_tag: "foo", routing_key: :some_key }}
-  let(:properties) {{ headers: {a: 1, b: 2}}}
+  let(:delivery_info) { { delivery_tag: "foo", routing_key: :some_key } }
+  let(:properties) { { headers: { a: 1, b: 2 } } }
   let(:event) { double(:event) }
   let(:message) { described_class.new(delivery_info, properties, event) }
 
@@ -22,5 +24,4 @@ RSpec.describe RegalBird::Messaging::Message do
   it "#routing_key" do
     expect(message.routing_key).to eql(delivery_info[:routing_key])
   end
-
 end

@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require "regal_bird/action"
 require "regal_bird/event"
 
 RSpec.describe RegalBird::Action do
-  let(:event) { double(:event, item_id: "55", state: :some_state, data: {f: 5, c: 6}) }
+  let(:event) { double(:event, item_id: "55", state: :some_state, data: { f: 5, c: 6 }) }
   let(:action) { described_class.new(event) }
 
   describe RegalBird::Action::Clean do
     describe "#execute" do
       it "raises no error" do
-        expect{RegalBird::Action::Clean.new(event).execute}
+        expect { RegalBird::Action::Clean.new(event).execute }
           .to_not raise_error
       end
     end
@@ -28,7 +30,7 @@ RSpec.describe RegalBird::Action do
 
   describe "#success" do
     let(:new_state) { :new_state }
-    let(:new_data) { {a: 2, b: 3} }
+    let(:new_data) { { a: 2, b: 3 } }
     it "has the new state" do
       expect(action.success(new_state, new_data)[:state]).to eql(new_state)
     end
@@ -46,7 +48,7 @@ RSpec.describe RegalBird::Action do
       expect(action.failure(message)[:state]).to eql(:some_state)
     end
     it "assigns the message to data[:error]" do
-      expect(action.failure(message)[:data]).to eql({error: message})
+      expect(action.failure(message)[:data]).to eql(error: message)
     end
     it "has no extra keys" do
       expect(action.failure(message).keys).to contain_exactly(:state, :data)
@@ -55,23 +57,23 @@ RSpec.describe RegalBird::Action do
 
   describe "#wrap_execution" do
     let(:state) { :some_state }
-    let(:data) { {a: 2, b: [1,2,3]} }
-    let(:result) { {state: :some_state, data: data} }
+    let(:data) { { a: 2, b: [1, 2, 3] } }
+    let(:result) { { state: :some_state, data: data } }
     context "block raises no error" do
       it "returns an event" do
-        expect(action.wrap_execution{result}).to be_an_instance_of(RegalBird::Event)
+        expect(action.wrap_execution { result }).to be_an_instance_of(RegalBird::Event)
       end
       it "returns an event with item_id == previous item_id" do
-        expect(action.wrap_execution{result}.item_id).to eql(event.item_id)
+        expect(action.wrap_execution { result }.item_id).to eql(event.item_id)
       end
       it "returns an event with emitter == self.class.to_s" do
-        expect(action.wrap_execution{result}.emitter).to eql(described_class.to_s)
+        expect(action.wrap_execution { result }.emitter).to eql(described_class.to_s)
       end
       it "returns an event with state == block.call[:state]" do
-        expect(action.wrap_execution{result}.state).to eql(state)
+        expect(action.wrap_execution { result }.state).to eql(state)
       end
       it "returns an event with data == previous.merge(block.call[:data])" do
-        expect(action.wrap_execution{result}.data).to eql(event.data.merge(data))
+        expect(action.wrap_execution { result }.data).to eql(event.data.merge(data))
       end
       it "manages start_time and end_time" do
         mid_time = nil
@@ -82,10 +84,6 @@ RSpec.describe RegalBird::Action do
         expect(actual.start_time).to be < mid_time
         expect(actual.end_time).to be > mid_time
       end
-
-
     end
   end
-
-
 end

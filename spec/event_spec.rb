@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "regal_bird/event"
 
 RSpec.describe RegalBird::Event do
@@ -6,7 +8,7 @@ RSpec.describe RegalBird::Event do
       item_id: "some_item_id",
       emitter: "something",
       state: :some_state,
-      data: {some: :data},
+      data: { some: :data },
       start_time: Time.at(0),
       end_time: Time.at(1000)
     )
@@ -25,7 +27,7 @@ RSpec.describe RegalBird::Event do
   end
 
   it "#data" do
-    expect(event.data).to eql({some: :data})
+    expect(event.data).to eql(some: :data)
   end
 
   it "#start_time" do
@@ -35,5 +37,4 @@ RSpec.describe RegalBird::Event do
   it "#end_time" do
     expect(event.end_time).to eql(Time.at(1000))
   end
-
 end
