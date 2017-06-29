@@ -25,6 +25,7 @@ RSpec.describe RegalBird::Plan do
 
   describe "#add_action_declaration" do
     let(:declaration) { RegalBird::Plan::ActionDeclaration.new(Fixnum, :ready, 5) }
+    let(:clean_decl) { RegalBird::Plan::ActionDeclaration.new(RegalBird::Action::Clean, :foo, 1) }
     it "adds the action" do
       expect { empty_plan.add_action_declaration(declaration) }
         .to change { empty_plan.actions }
@@ -33,6 +34,10 @@ RSpec.describe RegalBird::Plan do
     end
     it "returns self" do
       expect(empty_plan.add_action_declaration(declaration)).to eql(empty_plan)
+    end
+    it "does not add Action::Clean" do
+      expect { empty_plan.add_action_declaration(clean_decl) }
+        .to_not change { empty_plan.actions }
     end
   end
 
@@ -46,6 +51,10 @@ RSpec.describe RegalBird::Plan do
     end
     it "returns self" do
       expect(empty_plan.add_action(Fixnum, :ready, 5)).to eql(empty_plan)
+    end
+    it "does not add Action::Clean" do
+      expect { empty_plan.add_action(RegalBird::Action::Clean, :foo, 1) }
+        .to_not change { empty_plan.actions }
     end
   end
 

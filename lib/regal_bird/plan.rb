@@ -29,7 +29,9 @@ module RegalBird
     end
 
     def add_action_declaration(declaration)
-      @actions << declaration
+      unless declaration.klass == Action::Clean
+        @actions << declaration
+      end
       self
     end
 

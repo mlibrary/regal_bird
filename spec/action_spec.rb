@@ -5,6 +5,15 @@ RSpec.describe RegalBird::Action do
   let(:event) { double(:event, item_id: "55", state: :some_state, data: {f: 5, c: 6}) }
   let(:action) { described_class.new(event) }
 
+  describe RegalBird::Action::Clean do
+    describe "#execute" do
+      it "raises no error" do
+        expect{RegalBird::Action::Clean.new(event).execute}
+          .to_not raise_error
+      end
+    end
+  end
+
   describe "#noop" do
     it "has the previous state" do
       expect(action.noop[:state]).to eql(:some_state)

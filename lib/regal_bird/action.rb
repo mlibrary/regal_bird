@@ -48,7 +48,10 @@ module RegalBird
       end
     end
 
+  end
 
+  class Action::Clean < Action
+    def execute; end
   end
 
 end
