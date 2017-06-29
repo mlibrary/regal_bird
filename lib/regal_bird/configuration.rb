@@ -6,7 +6,8 @@ module RegalBird
 
   class Configuration <  OpenStruct
     DEFAULTS = {
-      plan_dir: nil
+      plan_dir: nil,
+      connection: nil
     }.freeze
 
     def initialize(hash = {})

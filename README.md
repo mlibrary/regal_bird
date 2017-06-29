@@ -32,11 +32,22 @@ gems is not recommended.
 
 # Configuration
 
-Regal Bird will look for a configuration file at
-`<project_root>/config/regal_bird.yml`.  The following fields are expected:
-* plan_dir: The directory of your plan files.  The default is `<project_root>/plans`
-* connection: A connection string. See the
-  [ruby bunny docs](http://rubybunny.info/articles/connecting.html) for more info.
+Regal Bird is primarily controlled via some rake tasks. To access them:
+1. Add `require regal_bird/tasks` to your Rakefile.
+2. Set the Regal Bird configuration in the `regal_bird:setup` task. E.g.:
+```ruby
+task "regal_bird:setup" do
+  require "myapp"
+  RegalBird.config = RegalBird::Configuration.new(
+    plan_dir: path to your plans, e.g. <project_root>/plans,
+    connection: a connection string
+  )
+end
+```
+
+See [ruby bunny docs](http://rubybunny.info/articles/connecting.html) for more info on
+how to connect to your rabbitmq server. You can leave `connection` blank to simply use
+the default parameters.
 
 # Usage
 
