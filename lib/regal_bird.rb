@@ -11,8 +11,19 @@ module RegalBird
     def config
       @config ||= Configuration.new
     end
+
     def config=(obj)
       @config = obj
     end
+
+    def add_steward(steward)
+      @stewards ||= {}
+      @stewards[steward.plan.name] = steward
+    end
+
+    def emit(plan_name, event)
+      @stewards[plan_name].emit(event)
+    end
+
   end
 end

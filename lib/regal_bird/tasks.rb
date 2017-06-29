@@ -28,7 +28,7 @@ namespace :regal_bird do
   namespace :plan do
     desc "Start a specific plan by path"
     task :start, [:path] => [:channel] do
-      RegalBird::Messaging::Steward.new(
+      RegalBird.add_steward RegalBird::Messaging::Steward.new(
         @channel,
         eval(File.read(args[:path]))
       )

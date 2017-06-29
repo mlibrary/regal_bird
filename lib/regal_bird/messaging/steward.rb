@@ -1,3 +1,8 @@
+require "regal_bird/messaging/retry_exchange"
+require "regal_bird/messaging/work_exchange"
+require "regal_bird/messaging/invoked/arrangement"
+require "regal_bird/messaging/logging/arrangement"
+require "regal_bird/messaging/polling/arrangement"
 
 module RegalBird
   module Messaging
@@ -13,6 +18,7 @@ module RegalBird
         @sources = []
         @actions = []
         @log = nil
+        @user_event_publisher = nil
       end
 
       # Create the exchanges, queues, and consumers as described
@@ -32,6 +38,11 @@ module RegalBird
           )
         end
         log = Logging::Arrangement.new(channel, work_exchange, plan.logger)
+        user_event_publisher = Invoked::Publisher.new(work_exchange, nil)
+      end
+
+      def emit(event)
+        user_event_publisher.success(event)
       end
 
       def delete
@@ -52,7 +63,7 @@ module RegalBird
       end
 
       attr_reader :channel, :plan
-      attr_accessor :actions, :log, :sources
+      attr_accessor :actions, :log, :sources, :user_event_publisher
     end
 
   end

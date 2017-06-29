@@ -252,6 +252,13 @@ two other convenience methods that can be used within `#wrap_execution`:
 * `#noop` for when the action succeeded, but the state did not change.  This is useful
   for checking if an external service has completed an operation.
 
+# Event-Based Usage
+
+Your plan does not need to specify a source, which implements a polling-based entry
+point.  Instead, you can send RegalBird::Event instances to Regal Bird directly from
+your app.  Simpley instantiate your RegalBird::Event, and send it via
+`RegalBird.emit(<plan_name>, <your event>)`.
+
 # Running Regal Bird
 
 As mentioned in the configuration section, Regal Bird provides rake tasks to run its
