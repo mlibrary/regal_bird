@@ -108,7 +108,7 @@ naive attempt to converge them will result in duplicate work.
 
 Unfortunately, Regal Bird does not support shared workers or worker pools at this time.
 
-### Part 3: Declaring Terminal States
+### Part 2.5: Declaring Terminal States
 
 Units that have completed or reached some other terminal state do not remain in
 Regal Bird's docket.  A special action is provided to add clarity to terminal states
@@ -126,6 +126,22 @@ RegalBird::Plan.define("foo") do
 end
 ```
 
+### Part 3: Declaring a Logger
+
+Plans accept a logger instance that conforms to the ruby standard Logger. It is okay
+to share the same logger between different plans, or have a separate logger for every
+plan. Specify it like so:
+
+```ruby
+RegalBird::Plan.define("bar") do
+  logger Rails.logger
+  # rest of your plan
+end
+```
+
+We do not recommend passing a logger that prints to STDOUT or STDERR.
+
+
 ### Putting it all together
 
 Here's a simple plan (that I've intentionally overcomplicated) that emails a
@@ -133,6 +149,7 @@ newsletter and sends a Twitter message each day.
 
 ```ruby
 RegalBird::Plan.define("newsletter_with_twitter") do
+  logger CoolBlog::Logger.new
   source CoolBlog::Newsletter::GetUsers, 60 * 60 * 24
   action :ready,      CoolBlog::Newsletter::SendEmail,        1
   action :no_email,   RegalBird::Action::Clean,               1
