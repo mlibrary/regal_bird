@@ -1,0 +1,8 @@
+require_relative "config"
+require_relative "determine_type"
+require_relative "json_source"
+require_relative "json_to_yaml"
+require_relative "move_to_done"
+require_relative "move_to_staging"
+require_relative "text_source"
+require_relative "text_to_json"
