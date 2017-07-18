@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rake"
+
 namespace :regal_bird do
   desc "Configure Regal Bird. See README"
   task :setup
