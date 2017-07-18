@@ -14,9 +14,9 @@ RSpec.describe "a simple end to end test", type: :integration do
     @fixture_builder.teardown
   end
 
-  xit "processes the files" do
+  it "processes the files" do
     @fixture_builder.setup(10,10)
-    Rake::Task["regal_bird:plan:start"].execute(Fledgling.root_dir + "plan.rb")
+    #Rake::Task["regal_bird:plan:start"].execute(Fledgling.root_dir + "plan.rb")
   end
 
 end

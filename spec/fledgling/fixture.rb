@@ -1,4 +1,5 @@
 require_relative "lib/config"
+require "faker"
 
 module Fledgling
 

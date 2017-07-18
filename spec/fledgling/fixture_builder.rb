@@ -1,5 +1,6 @@
 require_relative "lib/config"
 require_relative "fixture"
+require "fileutils"
 
 module Fledgling
 
@@ -13,7 +14,7 @@ module Fledgling
 
     def setup(num_txt, num_json)
       create_dirs!
-      num_text.times do
+      num_txt.times do
         fixture = Fixture.new
         fixtures << fixture
         File.write(fixture.txt_path, fixture.txt_content)
@@ -22,7 +23,6 @@ module Fledgling
         fixture = Fixture.new
         fixtures << fixture
         File.write(fixture.json_path, fixture.json_content)
-        make_file(json_content, ".json")
       end
     end
 
@@ -33,9 +33,9 @@ module Fledgling
     private
 
     def create_dirs!
-      File.mkdir_p Fledgling.source_dir
-      File.mkdir_p Fledgling.staging_dir
-      File.mkdir_p Fledgling.done_dir
+      FileUtils.mkdir_p Fledgling.source_dir
+      FileUtils.mkdir_p Fledgling.staging_dir
+      FileUtils.mkdir_p Fledgling.done_dir
     end
 
   end
