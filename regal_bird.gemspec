@@ -38,5 +38,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency "pry"
+  spec.add_development_dependency "faker"
   spec.add_development_dependency "rubocop"
 end
