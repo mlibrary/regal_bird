@@ -30,20 +30,22 @@ namespace :regal_bird do
 
   namespace :plan do
     desc "Start a specific plan by path"
-    task :start, [:path] => [:channel] do
-      RegalBird.add_steward RegalBird::Messaging::Steward.new(
-        @channel,
-        eval(File.read(args[:path]))
+    task :start, [:path] => [:channel] do |_, path|
+      RegalBird.add_steward(
+        RegalBird::Messaging::Steward.new(
+          @channel,
+          load(File.read(path))
+        )
       )
     end
 
     desc "Purge all remnants of a plan, and rename the plan file"
-    task :purge, [:path] => [:channel] do
+    task :purge, [:path] => [:channel] do |_, path|
       RegalBird::Messaging::Steward.new(
         @channel,
-        eval(File.read(args[:path]))
+        load(File.read(path))
       ).delete
-      File.rename args[:path], args[:path] + ".purged"
+      File.rename path, path.to_s + ".purged"
     end
   end
 end

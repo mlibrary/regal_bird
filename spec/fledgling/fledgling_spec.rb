@@ -5,6 +5,7 @@ require_relative "fixture_builder"
 require_relative "lib/fledgling"
 
 RSpec.describe "a simple end to end test", type: :integration do
+  let(:plan_path) { Fledgling.root_dir.parent + "lib" + "plan.rb" }
 
   before(:each) do
     @fixture_builder = Fledgling::FixtureBuilder.new
@@ -16,7 +17,13 @@ RSpec.describe "a simple end to end test", type: :integration do
 
   it "processes the files" do
     @fixture_builder.setup(10,10)
-    #Rake::Task["regal_bird:plan:start"].execute(Fledgling.root_dir + "plan.rb")
+    puts "executing #{plan_path}"
+    Rake::Task["regal_bird:plan:start"].execute(plan_path)
+    sleep 5
+    @fixture_builder.fixtures.each do |fixture|
+      expect(File.exist? fixture.expected_path).to be true
+      expect(File.read fixture.expected_path).to eql(fixture.expected_content)
+    end
   end
 
 end
