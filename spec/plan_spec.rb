@@ -11,9 +11,30 @@ RSpec.describe RegalBird::Plan do
   end
 
   describe "#define" do
+    before(:each) { described_class.clear_plans }
     it "sets the name" do
       plan = described_class.define("foo") {}
       expect(plan.name).to eql("foo")
+    end
+    it "adds the new plan to ::plans" do
+      plan = described_class.define("foo") {}
+      expect(described_class.plans).to eql([plan])
+    end
+    it "adds the new plan to ::plan(name) access" do
+      plan = described_class.define("foo") {}
+      expect(described_class.plan("foo")).to eql(plan)
+    end
+  end
+
+  describe "::plan, ::plans, ::add_plan" do
+    before(:each) { described_class.clear_plans }
+    it "::plan accesses plans by name" do
+      described_class.add_plan(empty_plan)
+      expect(described_class.plan(empty_plan.name)).to eql(empty_plan)
+    end
+    it "::plans returns stored plans" do
+      described_class.add_plan(empty_plan)
+      expect(described_class.plans).to eql([empty_plan])
     end
   end
 

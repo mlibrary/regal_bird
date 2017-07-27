@@ -54,7 +54,29 @@ module RegalBird
       plan = new(name)
       dsl = PlanDSL.new(plan)
       dsl.instance_eval(&block)
+      add_plan(plan)
       plan
+    end
+
+    def self.plans
+      _plans.values
+    end
+
+    def self.plan(name)
+      _plans[name]
+    end
+
+    def self.add_plan(plan)
+      _plans[plan.name] = plan
+    end
+
+    def self.clear_plans
+      @@plans = {}
+    end
+
+    private
+    def self._plans
+      @@plans ||= {}
     end
 
   end
