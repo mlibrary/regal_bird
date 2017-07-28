@@ -63,7 +63,7 @@ module RegalBird
     end
 
     def self.plan(name)
-      _plans[name]
+      _plans.fetch(name)
     end
 
     def self.add_plan(plan)
