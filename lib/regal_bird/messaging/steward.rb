@@ -23,6 +23,8 @@ module RegalBird
         @user_event_publisher = nil
       end
 
+      attr_reader :plan
+
       # Create the exchanges, queues, and consumers as described
       # by the plan.
       def create_infrastructure!
@@ -64,8 +66,7 @@ module RegalBird
         )
       end
 
-      def
-      def(_retry_exchange)
+      def retry_exchange
         @retry_exchange ||= RetryExchange.new("#{plan.name}-retry", channel)
       end
 
@@ -73,7 +74,7 @@ module RegalBird
         @work_exchange ||= WorkExchange.new("#{plan.name}-work", channel)
       end
 
-      attr_reader :channel, :plan
+      attr_reader :channel
       attr_accessor :actions, :log, :sources, :user_event_publisher
     end
 
