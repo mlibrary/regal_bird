@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "regal_bird/messaging/logging/work_queue"
 require "regal_bird/messaging/logging/consumer"
 
 module RegalBird
@@ -9,18 +8,22 @@ module RegalBird
 
       class Arrangement
 
-        # @param channel [Channel]
-        # @param work_exchange [WorkExchange]
-        # @param logger [Logger] A logger instance that follows the Logger
-        #   interface.
-        def initialize(channel, work_exchange, logger)
-          @work_queue = WorkQueue.new(channel, work_exchange)
-          Consumer.new(@work_queue, logger)
+        def initialize(work_queue)
+          @work_queue = work_queue
+          @consumer = nil
+        end
+
+        def set_consumer(logger)
+          self.consumer = Consumer.new(work_queue, logger)
         end
 
         def delete
-          @work_queue.delete
+          work_queue.delete
         end
+
+        private
+        attr_reader :work_queue
+        attr_accessor :consumer
 
       end
 

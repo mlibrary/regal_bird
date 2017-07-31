@@ -14,38 +14,47 @@ namespace :regal_bird do
     @channel ||= RegalBird::Messaging::Channel.new
   end
 
-  desc "Start all plans"
-  task start: [:prepare, :channel] do
+  task require_plans: [:prepare] do
+    require 'pry'; binding.pry
     Dir[RegalBird.config.plan_dir + "**" + "*.rb"].each do |path|
-      Rake::Task["plan:start"].execute(path)
+      require path
+    end
+  end
+
+  desc "Start all plans"
+  task start: [:require_plans] do
+    RegalBird.plans.each do |plan|
+      Rake::Task["plan:start"].execute(plan.name)
     end
   end
 
   desc "Purge all plans"
-  task purge: [:prepare, :channel] do
-    Dir[RegalBird.config.plan_dir + "**" + "*.rb"].each do |path|
-      Rake::Task["plan:purge"].execute(path)
+  task purge: [:require_plans] do
+    RegalBird.plans.each do |plan|
+      Rake::Task["plan:purge"].execute(plan.name)
     end
   end
 
+
   namespace :plan do
-    desc "Start a specific plan by path"
-    task :start, [:path] => [:channel] do |_, path|
+    desc "Start a specific plan by name"
+    task :start, [:name] => [:require_plans, :channel] do |_, name|
       RegalBird.add_steward(
         RegalBird::Messaging::Steward.new(
           @channel,
-          load(File.read(path))
+          RegalBird::Plan.plan(name)
         )
       )
     end
 
-    desc "Purge all remnants of a plan, and rename the plan file"
-    task :purge, [:path] => [:channel] do |_, path|
+    desc "Purge all remnants of a plan by name."
+    task :purge, [:name] => [:channel] do |_, name|
       RegalBird::Messaging::Steward.new(
         @channel,
-        load(File.read(path))
+        RegalBird::Plan.plan(name)
       ).delete
-      File.rename path, path.to_s + ".purged"
     end
+
   end
+
 end

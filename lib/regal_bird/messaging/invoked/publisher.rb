@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "regal_bird/messaging/invoked/retry_queue"
+require "regal_bird/messaging/invoked/retry_queue_config"
+require "regal_bird/messaging/queue"
 require "regal_bird/messaging/event_serializer"
 
 module RegalBird
@@ -15,12 +16,12 @@ module RegalBird
         end
 
         def retry(message, error_msg)
-          new_ttl = next_ttl(message)
-          create_backoff_queue!(new_ttl)
+          backoff_queue(next_ttl(message))
           retry_exchange.publish(
             EventSerializer.serialize(message.event),
             routing_key: message.routing_key,
-            headers: message.headers.merge("retry-wait" => new_ttl,
+            headers: message.headers.merge(
+              "retry-wait" => next_ttl(message),
               "error" => error_msg)
           )
         end
@@ -38,13 +39,17 @@ module RegalBird
           message.headers.fetch("retry-wait", 1) * 2
         end
 
-        def create_backoff_queue!(ttl)
-          RetryQueue.new(
-            work_exchange.channel,
-            work_exchange,
-            retry_exchange,
-            ttl
-          )
+        def backoff_queue(ttl)
+          config = rq_config(ttl)
+          q = work_exchange.channel.queue(
+            config.name,
+            config.channel_opts(work_exchange)
+          ).bind(retry_exchange, config.bind_opts)
+          Messaging::Queue.new(q, config.route)
+        end
+
+        def rq_config(ttl)
+          RetryQueueConfig.new(ttl)
         end
 
         attr_reader :work_exchange, :retry_exchange

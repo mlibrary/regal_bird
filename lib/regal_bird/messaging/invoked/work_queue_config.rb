@@ -1,28 +1,22 @@
 # frozen_string_literal: true
 
-require "regal_bird/messaging/queue"
 
 module RegalBird
   module Messaging
-    module Polling
+    module Invoked
 
-      class WorkQueue < Queue
+      class WorkQueueConfig
 
-        def initialize(channel, work_exchange, step_class, routing_key)
-          @channel = channel
+        def initialize(step_class, routing_key)
           @step_class = step_class
           @routing_key = routing_key
-          super(channel, work_exchange)
         end
 
-        def channel_opts
+        def channel_opts(_)
           {
             exclusive:   false,
             auto_delete: false,
-            durable:     true,
-            arguments:   {
-              "x-max-length" => 1
-            }
+            durable:     true
           }
         end
 
@@ -31,11 +25,15 @@ module RegalBird
         end
 
         def name
-          "source-#{step_class.to_s.downcase.gsub("::", "_")}-work"
+          "action-#{step_class.to_s.downcase.gsub("::", "_")}-work"
         end
 
         def route
           { routing_key: routing_key }
+        end
+
+        def init_messages
+          []
         end
 
         private

@@ -1,22 +1,17 @@
 # frozen_string_literal: true
 
-require "regal_bird/messaging/queue"
 
 module RegalBird
   module Messaging
     module Invoked
 
-      class RetryQueue < Queue
+      class RetryQueueConfig
 
-        def initialize(channel, work_exchange, retry_exchange, ttl)
-          @channel = channel
-          @work_exchange = work_exchange
-          @retry_exchange = retry_exchange
+        def initialize(ttl)
           @ttl = ttl
-          super(channel, retry_exchange)
         end
 
-        def channel_opts
+        def channel_opts(work_exchange)
           {
             exclusive:   false,
             auto_delete: true,
@@ -41,9 +36,13 @@ module RegalBird
           { "retry-wait" => ttl }
         end
 
+        def init_messages
+          []
+        end
+
         private
 
-        attr_reader :work_exchange, :ttl
+        attr_reader :ttl
       end
 
     end

@@ -1,20 +1,13 @@
 # frozen_string_literal: true
 
-require "regal_bird/messaging/queue"
 
 module RegalBird
   module Messaging
     module Logging
 
-      class WorkQueue < Queue
+      class WorkQueueConfig
 
-        def initialize(channel, work_exchange)
-          @channel = channel
-          @work_exchange = work_exchange
-          super(channel, work_exchange)
-        end
-
-        def channel_opts
+        def channel_opts(_)
           {
             exclusive:   false,
             auto_delete: false,

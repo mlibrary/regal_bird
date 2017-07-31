@@ -4,10 +4,12 @@ module RegalBird
   module Messaging
 
     class Queue < SimpleDelegator
-      def initialize(channel, exchange)
-        @channel = channel
-        @queue = channel.queue(name, channel_opts)
-        @queue.bind(exchange, bind_opts)
+
+      attr_reader :route
+
+      def initialize(queue, route)
+        @queue = queue
+        @route = route
         __setobj__ @queue
       end
 
@@ -15,21 +17,6 @@ module RegalBird
         channel.ack(delivery_tag, false)
       end
 
-      def name
-        raise NotImplementedError
-      end
-
-      def channel_opts
-        raise NotImplementedError
-      end
-
-      def bind_opts
-        raise NotImplementedError
-      end
-
-      private
-
-      attr_reader :channel, :queue
     end
 
   end
