@@ -6,6 +6,8 @@ module RegalBird
     module Invoked
 
       class RetryQueueConfig
+        # There's some trouble here with the Routing object, because
+        # ttl is defined on the fly.
 
         def initialize(ttl)
           @ttl = ttl
@@ -36,12 +38,7 @@ module RegalBird
           { "retry-wait" => ttl }
         end
 
-        def init_messages
-          []
-        end
-
         private
-
         attr_reader :ttl
       end
 

@@ -6,6 +6,7 @@ module RegalBird
     module Invoked
 
       class WorkQueueConfig
+        # Routing object replaces params easily
 
         def initialize(step_class, routing_key)
           @step_class = step_class
@@ -32,12 +33,7 @@ module RegalBird
           { routing_key: routing_key }
         end
 
-        def init_messages
-          []
-        end
-
         private
-
         attr_reader :step_class, :routing_key
       end
 

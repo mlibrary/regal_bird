@@ -19,6 +19,13 @@ module RegalBird
         work.delete
       end
 
+      def publish(event)
+        work.publish(
+          EventSerializer.serialize(event),
+          routing_key: "action.#{event.state}"
+        )
+      end
+
     end
 
   end

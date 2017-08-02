@@ -10,8 +10,7 @@ module RegalBird
 
       class Publisher
 
-        def initialize(work_exchange, retry_exchange)
-          @work_exchange = work_exchange
+        def initialize(retry_exchange)
           @retry_exchange = retry_exchange
         end
 
@@ -26,13 +25,6 @@ module RegalBird
           )
         end
 
-        def success(event)
-          work_exchange.publish(
-            EventSerializer.serialize(event),
-            routing_key: "action.#{event.state}"
-          )
-        end
-
         private
 
         def next_ttl(message)
@@ -41,7 +33,7 @@ module RegalBird
 
         def backoff_queue(ttl)
           config = rq_config(ttl)
-          q = work_exchange.channel.queue(
+          q = retry_exchange.channel.queue(
             config.name,
             config.channel_opts(work_exchange)
           ).bind(retry_exchange, config.bind_opts)
@@ -52,7 +44,7 @@ module RegalBird
           RetryQueueConfig.new(ttl)
         end
 
-        attr_reader :work_exchange, :retry_exchange
+        attr_reader :retry_exchange
 
       end
 

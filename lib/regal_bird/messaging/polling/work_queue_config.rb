@@ -6,10 +6,8 @@ module RegalBird
     module Polling
 
       class WorkQueueConfig
-
-        def initialize(step_class, routing_key)
-          @step_class = step_class
-          @routing_key = routing_key
+        def initialize(routing_info)
+          @routing_info = routing_info
         end
 
         def channel_opts(_)
@@ -28,21 +26,18 @@ module RegalBird
         end
 
         def name
-          "source-#{step_class.to_s.downcase.gsub("::", "_")}-work"
+          routing_info.work_queue_name
         end
 
         def route
-          { routing_key: routing_key }
-        end
-
-        def init_messages
-          []
+          routing_info.work_queue_route
         end
 
         private
-        attr_reader :step_class, :routing_key
+        attr_reader :routing_info
       end
 
     end
   end
 end
+
