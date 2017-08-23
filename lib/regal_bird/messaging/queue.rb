@@ -5,11 +5,8 @@ module RegalBird
 
     class Queue < SimpleDelegator
 
-      attr_reader :route
-
-      def initialize(queue, route)
+      def initialize(queue)
         @queue = queue
-        @route = route
         __setobj__ @queue
       end
 
@@ -21,3 +18,4 @@ module RegalBird
 
   end
 end
+z
