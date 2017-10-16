@@ -25,7 +25,8 @@ module RegalBird
         end
 
         def name
-          "action-#{step_class.to_s.downcase.gsub("::", "_")}-work"
+          # A hack here that must be fixed
+          "action-#{routing_key.split('.').last}-#{step_class.to_s.downcase.gsub("::", "_")}-work"
         end
 
         def route
