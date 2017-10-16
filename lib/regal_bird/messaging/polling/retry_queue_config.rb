@@ -31,7 +31,7 @@ module RegalBird
           { arguments: route.merge("x-match" => "all") }
         end
 
-        def queue_name
+        def name
           "source-#{step_class.to_s.downcase.gsub("::", "_")}-retry"
         end
 
