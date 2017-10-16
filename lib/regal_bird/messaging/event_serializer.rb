@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require "json"
+require "active_support/core_ext/time"
 require "regal_bird/event"
+
 
 module RegalBird
   module Messaging

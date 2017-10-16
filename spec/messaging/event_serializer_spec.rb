@@ -2,6 +2,7 @@
 
 require "regal_bird/messaging/event_serializer"
 require "regal_bird/event"
+require "active_support/core_ext/time"
 require "json"
 
 RSpec.describe RegalBird::Messaging::EventSerializer do
