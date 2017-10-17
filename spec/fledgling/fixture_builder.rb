@@ -4,6 +4,7 @@ require "fileutils"
 
 module Fledgling
 
+  # Builds and represents a set of fixtures in memory and on disk
   class FixtureBuilder
 
     attr_reader :fixtures
