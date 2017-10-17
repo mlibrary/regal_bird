@@ -16,11 +16,7 @@ module RegalBird
     end
 
     def plan_dir=(value)
-      self[:plan_dir] = if value.nil?
-        nil
-      else
-        Pathname.new(value)
-      end
+      self[:plan_dir] = Pathname.new(value.to_s)
     end
 
     def plan_dir
