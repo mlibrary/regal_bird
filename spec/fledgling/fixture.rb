@@ -3,6 +3,9 @@ require "faker"
 
 module Fledgling
 
+  # Represents a unit of data, and defines how to write
+  # that data to disk. Tests can compare actual results to
+  # the corresponding methods on objects of this class.
   class Fixture
     def json_path
       Fledgling.source_dir + "#{name}.json"
@@ -17,41 +20,33 @@ module Fledgling
     end
 
     def json_content
-      JSON.generate(base_content)
+      JSON.generate(content)
     end
 
     def txt_content
-      [noun, count, comment].join("\n")
+      [
+        content["noun"],
+        content["count"],
+        content["comment"]
+      ].join("\n")
     end
 
     def expected_content
-      YAML.dump(base_content)
+      YAML.dump(content)
     end
 
     private
-
-    def base_content
-      {
-        "noun" => noun,
-        "count" => count,
-        "comment" => comment
-      }
-    end
 
     def name
       @name ||= Faker::Food.spice
     end
 
-    def noun
-      @noun ||= Faker::Pokemon.name
-    end
-
-    def count
-      @count ||= rand(1..100)
-    end
-
-    def comment
-      @comment ||= Faker::HitchhikersGuideToTheGalaxy.marvin_quote
+    def content
+      @content ||= {
+        "noun" => Faker::Pokemon.name,
+        "count" => rand(1..100),
+        "comment" => Faker::HitchhikersGuideToTheGalaxy.marvin_quote
+      }
     end
   end
 
