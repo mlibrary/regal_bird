@@ -1,10 +1,15 @@
 require "regal_bird"
-require_relative "fledgling"
+require_relative "../lib/fledgling"
+require "logger"
 
-RegalBird::Plan.define("fledgling") do
-  logger Fledgling.logger
-  source Fledgling::TextSource, 2
-  source Fledgling::JsonSource, 2
+mylogger = Logger.new("/home/bhock/code/regal_bird/spec/fledgling/log.txt")
+mylogger.level = Logger::DEBUG
+
+RegalBird::Plan.define("simple_fledgling") do
+  #logger Logger.new(STDOUT)
+  logger mylogger
+  source Fledgling::TextSource, 1
+  source Fledgling::JsonSource, 1
   action :ready, Fledgling::MoveToStaging, 1
   action :staged, Fledgling::DetermineType, 1
   action :txt,  Fledgling::TextToJson, 1

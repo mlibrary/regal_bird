@@ -2,7 +2,7 @@ require "regal_bird"
 require "pathname"
 
 module Fledgling
-  class TextSource < RegalBird::Source
+  class JsonSource < RegalBird::Source
     def execute
       wrap_execution do
         Dir[Fledgling.source_dir + "*.json"]

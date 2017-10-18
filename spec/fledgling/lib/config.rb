@@ -9,6 +9,10 @@ module Fledgling
     root_dir + "test"
   end
 
+  def self.plan_dir
+    root_dir + "plans"
+  end
+
   def self.source_dir
     test_dir + "source"
   end
@@ -19,6 +23,10 @@ module Fledgling
 
   def self.done_dir
     test_dir + "done"
+  end
+
+  def self.logger
+    @logger ||= Logger.new
   end
 end
 

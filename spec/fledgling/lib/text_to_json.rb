@@ -1,14 +1,15 @@
 require "regal_bird"
 require "json"
+require "fileutils"
 
 module Fledgling
   class TextToJson < RegalBird::Action
     def execute
       wrap_execution do
         content = File.read(txt_path)
-        noun, count, comment = contents.strip.split("\n")
-        `rm -f #{txt_path}`
-        File.write(json_path, json_content)
+        noun, count, comment = content.strip.split("\n")
+        File.write(json_path, json_content(noun, count, comment))
+        FileUtils.rm_f txt_path
         success(:json, {path: json_path})
       end
     end
