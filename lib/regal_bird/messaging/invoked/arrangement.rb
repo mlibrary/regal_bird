@@ -10,7 +10,7 @@ module RegalBird
         def initialize(work_queue, publisher)
           @work_queue = work_queue
           @publisher = publisher
-          @consumers = consumers
+          @consumers = []
         end
 
         def delete

@@ -14,10 +14,11 @@ module RegalBird
       end
 
       def delete
-        arrangements.each{|arrangement| arrangement.delete }
-        self.retry.delete
-        work.delete
+        @arrangements.each{|arrangement| arrangement.delete }
+        @retry.delete
+        @work.delete
       end
+
 
     end
 

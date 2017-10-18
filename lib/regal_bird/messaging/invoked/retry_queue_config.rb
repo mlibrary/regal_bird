@@ -18,8 +18,8 @@ module RegalBird
             durable:     false,
             arguments:   {
               "x-dead-letter-exchange" => work_exchange.name,
-              "x-message-ttl"          => ttl * 1000,
-              "x-expires"              => ttl * 2 * 1000
+              "x-message-ttl"          => ttl.to_i,
+              "x-expires"              => ttl.expiration.to_i
             }
           }
         end
@@ -33,7 +33,7 @@ module RegalBird
         end
 
         def route
-          { "retry-wait" => ttl }
+          { "retry-wait" => ttl.to_i }
         end
 
         def init_messages

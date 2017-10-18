@@ -3,6 +3,7 @@
 require "regal_bird/messaging/invoked/retry_queue_config"
 require "regal_bird/messaging/queue"
 require "regal_bird/messaging/event_serializer"
+require "regal_bird/messaging/ttl"
 
 module RegalBird
   module Messaging
@@ -16,12 +17,13 @@ module RegalBird
         end
 
         def retry(message, error_msg)
-          backoff_queue(next_ttl(message))
+          current_ttl = TTL.new(message.headers.fetch("retry-wait"))
+          backoff_queue(current_ttl.successor)
           retry_exchange.publish(
             EventSerializer.serialize(message.event),
             routing_key: message.routing_key,
             headers: message.headers.merge(
-              "retry-wait" => next_ttl(message),
+              "retry-wait" => current_ttl.successor.to_i,
               "error" => error_msg)
           )
         end
@@ -34,10 +36,6 @@ module RegalBird
         end
 
         private
-
-        def next_ttl(message)
-          message.headers.fetch("retry-wait", 1) * 2
-        end
 
         def backoff_queue(ttl)
           config = rq_config(ttl)

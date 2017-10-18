@@ -10,8 +10,8 @@ module RegalBird
         def initialize(logger)
           @logger = logger
         end
-        
-        def build(wx)
+
+        def build(wx, _)
           wq = Messaging::Queue.new(backend_wq(wx), wq_config.route)
           arrangement = Arrangement.new(wq)
           arrangement.set_consumer(logger)
