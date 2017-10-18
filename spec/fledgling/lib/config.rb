@@ -2,19 +2,23 @@ require "pathname"
 
 module Fledgling
   def self.root_dir
-    Pathname.new(__FILE__).parent.parent + "test"
+    Pathname.new(__FILE__).parent.parent
+  end
+
+  def self.test_dir
+    root_dir + "test"
   end
 
   def self.source_dir
-    root_dir + "source"
+    test_dir + "source"
   end
 
   def self.staging_dir
-    root_dir + "staging"
+    test_dir + "staging"
   end
 
   def self.done_dir
-    root_dir + "done"
+    test_dir + "done"
   end
 end
 

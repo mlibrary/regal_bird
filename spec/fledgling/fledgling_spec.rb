@@ -1,11 +1,10 @@
 require "regal_bird"
-require_relative "../util/rake"
 require_relative "fixture"
 require_relative "fixture_builder"
 require_relative "lib/fledgling"
 
 RSpec.describe "a simple end to end test", type: :integration do
-  let(:plan_path) { Fledgling.root_dir.parent + "lib" + "plan.rb" }
+  let(:plan_name) { "simple_fledgling" }
 
   before(:each) do
     @fixture_builder = Fledgling::FixtureBuilder.new
@@ -13,12 +12,13 @@ RSpec.describe "a simple end to end test", type: :integration do
 
   after(:each) do
     @fixture_builder.teardown
+    RegalBird::CLI.new.invoke("plan_purge", [plan_name], plan_dir: Fledgling.plan_dir)
   end
 
   it "processes the files" do
     @fixture_builder.setup(10,10)
-    puts "executing #{plan_path}"
-    Rake::Task["regal_bird:plan:start"].execute(plan_path)
+    puts "executing #{plan_name}"
+    RegalBird::CLI.new.invoke("plan_start", [plan_name], plan_dir: Fledgling.plan_dir)
     sleep 5
     @fixture_builder.fixtures.each do |fixture|
       expect(File.exist? fixture.expected_path).to be true

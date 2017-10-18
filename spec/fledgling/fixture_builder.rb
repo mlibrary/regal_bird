@@ -28,7 +28,9 @@ module Fledgling
     end
 
     def teardown
-      `rm -rf #{Fledgling.root_dir}`
+      `rm -rf #{Fledgling.source_dir}`
+      `rm -rf #{Fledgling.staging_dir}`
+      `rm -rf #{Fledgling.done_dir}`
     end
 
     private
