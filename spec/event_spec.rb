@@ -27,7 +27,8 @@ RSpec.describe RegalBird::Event do
   end
 
   it "#data" do
-    expect(event.data).to eql(some: :data)
+    expect(event.data[:some]).to eql(:data)
+    expect(event.data["some"]).to eql(:data)
   end
 
   it "#start_time" do

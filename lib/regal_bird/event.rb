@@ -1,5 +1,6 @@
-
 # frozen_string_literal: true
+
+require "active_support/core_ext/hash/indifferent_access"
 
 module RegalBird
 
@@ -18,7 +19,7 @@ module RegalBird
       @item_id = item_id.to_s
       @emitter = emitter.to_s
       @state = state.to_sym
-      @data = data
+      @data = ActiveSupport::HashWithIndifferentAccess.new(data)
       @start_time = start_time.utc
       @end_time = end_time.utc
     end
