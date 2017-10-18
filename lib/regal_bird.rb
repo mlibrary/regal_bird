@@ -5,6 +5,7 @@ require "regal_bird/version"
 require "regal_bird/action"
 require "regal_bird/active_plan"
 require "regal_bird/active_plan_builder"
+require "regal_bird/cli"
 require "regal_bird/event"
 require "regal_bird/plan"
 require "regal_bird/source"
@@ -19,11 +20,11 @@ module RegalBird
     attr_writer :config
 
     def add_active_plan(active_plan)
-      @active_plans[active_plan.plan.name] = active_plan
+      active_plans[active_plan.plan.name] = active_plan
     end
 
     def emit(plan_name, event)
-      @active_plans[plan_name].emit(event)
+      active_plans[plan_name].emit(event)
     end
 
     private
