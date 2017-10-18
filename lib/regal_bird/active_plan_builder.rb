@@ -5,6 +5,7 @@ module RegalBird
 
   # Given a plan, create an active plan
   class ActivePlanBuilder
+    attr_reader :plan
 
     def initialize(plan)
       @plan = plan
@@ -34,16 +35,17 @@ module RegalBird
           }
         )
         .concat(
-          Messaging::Logging::ArrangementBuilder.new(plan.logger)
+          if plan.logger.nil?
+            []
+          else
+            [Messaging::Logging::ArrangementBuilder.new(plan.logger)]
+          end
         )
     end
 
     def exchange_builder
-      @exchange_builder ||= ExchangeBuilder.new(plan.name)
+      @exchange_builder ||= Messaging::ExchangeBuilder.new(plan.name)
     end
-
-
-
   end
 
 end
