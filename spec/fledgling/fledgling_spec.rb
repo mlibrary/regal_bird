@@ -3,7 +3,7 @@ require_relative "fixture"
 require_relative "fixture_builder"
 require_relative "lib/fledgling"
 
-RSpec.describe "a simple end to end test", type: :integration do
+RSpec.describe "a simple end to end test", integration: true do
   let(:plan_name) { "simple_fledgling" }
 
   before(:each) do
