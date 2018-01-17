@@ -73,7 +73,7 @@ RSpec.describe RegalBird::Action do
         expect(action.wrap_execution { result }.state).to eql(state)
       end
       it "returns an event with data == previous.merge(block.call[:data])" do
-        expect(action.wrap_execution { result }.data).to eql(event.data.merge(data))
+        expect(action.wrap_execution { result }.data).to eql(event.data.merge(data).stringify_keys)
       end
       it "manages start_time and end_time" do
         mid_time = nil
