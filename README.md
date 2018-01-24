@@ -172,12 +172,16 @@ Sources obtain sets of data, generally from an external service.  A source must 
 
 ```ruby
 class GetUsers < RegalBird::Source
-  def execute
+  def execute(_)
     start_time = Time.now.utc
     users = User.active
     users.map do |user|
-      RegalBird::Event.new(item_id: user.username, state: :ready, emitter: "GetUsers",
-        start_time: start_time, end_time: Time.now.utc,
+      RegalBird::Event.new(
+        item_id: user.username,
+        state: :ready,
+        emitter: "GetUsers",
+        start_time: start_time,
+        end_time: Time.now.utc,
         data: {id: user.name, user: user.email}
       )
     end
@@ -185,18 +189,15 @@ class GetUsers < RegalBird::Source
 end
 ```
 
-Obviously, this is a bit much, and the above doesn't even handle exceptions.  Regal Bird provides
-some convenience methods for you so that the above can be written as below.  This will handle
-exceptions automatically (by logging the error).  When a source fails, it is not run again until
-its next regularly-scheduled time.
+Obviously, this is a bit much.  This is why Regal Bird provides the `result` object as a
+parameter. It provides the convenience method `#success` so that the above can be written
+as below. When a source fails, it is not run again until its next regularly-scheduled time.
 
 ```ruby
 class GetUsers < RegalBird::Source
-  def execute
-    wrap_execution do
-      Users.active.map do |user|
-        success(user.username, :ready, {email: user.email})
-      end
+  def execute(result)
+    Users.active.map do |user|
+      result.success(user.username, :ready, {email: user.email})
     end
   end
 end
@@ -213,16 +214,15 @@ represented as a RegalBird::Event, accessible via `#event`. E.g., to get item's 
 `#event.item_id`. Most likely, you'll want to access previous data that has been recorded; this
 can be done via `#event.data`, which will return a hash.
 
-`#event.data` only contains the hash from the most recently emitted RegalBird::Event, so if you
-need to forward information for a latter step in your plan, be sure to copy the contents of the
-hash to the Event returned by `#execute`.
+Each time you add information to `#event.data`, it is merged with the data from previous
+events. Re-used keypairs are overwritten.
 
 Please note that only JSON-serializable data can be stored or retrieved from the event.
 The event log will handle serialization and deserialization for you.
 
 ```ruby
 class GetTwitterHandle < RegalBird::Action
-  def execute
+  def execute(_)
     start_time = Time.now.utc
       handle = TwitterService.handle(event.data[:email])
       if handle != nil
@@ -240,9 +240,9 @@ class GetTwitterHandle < RegalBird::Action
 end
 ```
 
-Again, you are *highly encouraged* to use `#wrap_execution` and the other convenience methods.
-They clean up the above code, and handle any exceptions raised.  Note that the default
-behavior for handling exceptions is to:
+Again, you are *highly encouraged* to use the convenience methods on the result parameter.
+
+Note that the default behavior for handling exceptions is to:
  1. Requeue the event
  2. Log the exception to a file log.
  3. Store the error in `#event.data[:error]` for the next action, if needed.
@@ -251,20 +251,18 @@ The above can be rewritten as the following:
 
 ```ruby
 class GetTwitterHandle < RegalBird::Action
-   def execute
-     wrap_execution do
+   def execute(result)
        if handle != nil
-         success(:handle_found, {handle: handle})
+         result.success(:handle_found, {handle: handle})
        else
-         success(:no_twitter, {})
+         result.success(:no_twitter, {})
        end
-     end
    end
  end
 ```
 
 This now features the default exception handling behavior.  In addition, there are
-two other convenience methods that can be used within `#wrap_execution`:
+two other convenience methods:
 * `#failure(message or exception)` will perform the failure behavior described above.
 * `#noop` for when the action succeeded, but the state did not change.  This is useful
   for checking if an external service has completed an operation.

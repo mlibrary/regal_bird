@@ -2,6 +2,7 @@
 
 require "ostruct"
 require "pathname"
+require "logger"
 
 module RegalBird
 
@@ -25,6 +26,10 @@ module RegalBird
 
     def valid?
       !plan_dir.nil?
+    end
+
+    def logger
+      @logger ||= Logger.new("log/regal_bird.log")
     end
 
   end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/hash/indifferent_access"
+require "active_support/core_ext/hash/keys"
 
 module RegalBird
 
@@ -19,7 +20,7 @@ module RegalBird
       @item_id = item_id.to_s
       @emitter = emitter.to_s
       @state = state.to_sym
-      @data = ActiveSupport::HashWithIndifferentAccess.new(data)
+      @data = ActiveSupport::HashWithIndifferentAccess.new(data.deep_stringify_keys)
       @start_time = start_time.utc
       @end_time = end_time.utc
     end

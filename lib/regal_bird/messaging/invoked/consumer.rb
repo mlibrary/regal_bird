@@ -21,7 +21,7 @@ module RegalBird
 
         # @param message [Message]
         def perform(message)
-          result = step_class.new(message.event).execute
+          result = step_class.new(message.event).safe_execute
           publisher.success(result)
         rescue StandardError => e
           publisher.retry(message, "#{e.message}\n#{e.backtrace}")

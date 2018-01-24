@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "regal_bird/event"
+require "regal_bird/action_result"
 
 module RegalBird
 
@@ -9,55 +9,36 @@ module RegalBird
   # Event.
   class Action
     class Clean < Action
-      def execute; end
+      def execute(_); end
+    end
+
+    # @param event [Event]
+    def initialize(event, result_builder = ActionResult)
+      @event = event
+      @result_builder = result_builder
     end
 
     attr_reader :event
 
-    # @param event [Event]
-    def initialize(event)
-      @event = event
-    end
-
+    # @param result [ActionResult]
     # @return [Event]
-    def execute
+    def execute(result)
       raise NotImplementedError
     end
 
-    def success(state, data)
-      { state: state, data: data }
-    end
-
-    def noop
-      { state: event.state, data: {} }
-    end
-
-    def failure(message)
-      { state: event.state, data: { error: message } }
-    end
-
-    def wrap_execution
-      start_time = Time.now.utc
+    def safe_execute
+      result = result_builder.for(self)
       begin
-        result = yield
-        new_event(result[:state], start_time, result[:data])
+        execute(result)
       rescue StandardError => e
-        new_event(event.state, start_time, error: "#{e.message}\n#{e.backtrace}")
+        RegalBird.config.logger.error "#{e.message}\n#{e.backtrace}"
+        result.failure("#{e.message}\n#{e.backtrace}")
       end
     end
 
     private
 
-    def new_event(state, start_time, new_data)
-      RegalBird::Event.new(
-        item_id: event.item_id,
-        state: state,
-        emitter: self.class.to_s,
-        start_time: start_time,
-        end_time: Time.now.utc,
-        data: event.data.merge(new_data)
-      )
-    end
+    attr_reader :result_builder
 
   end
 

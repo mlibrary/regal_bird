@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "regal_bird/event"
+require "regal_bird/source_result"
 
 module RegalBird
 
@@ -8,33 +8,29 @@ module RegalBird
   # data stores.
   class Source
 
+    def initialize(result_builder = SourceResult)
+      @result_builder = result_builder
+    end
+
+    # @param result [SourceResult]
     # @return [Array<Event>]
-    def execute
+    def execute(result)
       raise NotImplementedError
     end
 
-    def success(item_id, state, data)
-      {
-        item_id: item_id,
-        state:   state,
-        data:    data
-      }
-    end
-
-    def wrap_execution
-      start_time = Time.now.utc
+    def safe_execute
+      result = result_builder.for(self)
       begin
-        results = yield
-        results.map do |result|
-          RegalBird::Event.new(item_id: result[:item_id], state: result[:state],
-            emitter: self.class.to_s, start_time: start_time, end_time: Time.now.utc,
-            data: result[:data])
-        end
+        execute(result)
       rescue StandardError => e
         RegalBird.config.logger.error "#{e.message}\n#{e.backtrace}"
         []
       end
     end
+
+    private
+
+    attr_reader :result_builder
   end
 
 end

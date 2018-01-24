@@ -23,7 +23,7 @@ module RegalBird
         def perform(message)
           publisher.retry(message)
           queue.ack(message.delivery_tag)
-          step_class.new.execute.each do |event|
+          step_class.new.safe_execute.each do |event|
             publisher.success(event)
           end
         end

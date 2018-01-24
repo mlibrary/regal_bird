@@ -1,47 +1,51 @@
 # frozen_string_literal: true
 
+require "regal_bird/components"
 require "regal_bird/source"
-require "regal_bird/event"
 
-RSpec.describe RegalBird::Source do
-  describe "#wrap_execution" do
-    let(:source) { described_class.new }
-    let(:result_1) { { item_id: "1", state: :foo_state, data: { zip: [12, 34] } } }
-    let(:result_2) { { item_id: "2", state: :bar_state, data: {} } }
-    let(:results) { [result_1, result_2] }
-    let(:emitter) { described_class.to_s }
+module RegalBird
 
-    context "block raises no error" do
-      it "returns an array of events" do
-        expect(source.wrap_execution { results })
-          .to contain_exactly(
-            an_instance_of(RegalBird::Event),
-            an_instance_of(RegalBird::Event)
-)
+  RSpec.describe RegalBird::Source do
+    class TestSource < RegalBird::Source
+      class Error < StandardError; end
+      def initialize(result_builder = nil, &block)
+        super(result_builder)
+        @block = block
       end
-      it "returns events with action == self.class.to_s" do
-        events = source.wrap_execution { results }
-        expect(events.map(&:emitter)).to contain_exactly(emitter, emitter)
+      def execute(result)
+        @block.call(result)
       end
-      it "returns events with state == block.call[:state]" do
-        events = source.wrap_execution { results }
-        expect(events.map(&:state)).to contain_exactly(result_1[:state], result_2[:state])
-      end
-      it "returns events with data == block.call[:data]" do
-        events = source.wrap_execution { results }
-        expect(events.map(&:data)).to contain_exactly(result_1[:data], result_2[:data])
-      end
-      it "manages start_time and end_time" do
-        mid_time = nil
-        actual = source.wrap_execution do
-          mid_time = Time.now.utc
-          results
-        end
-        actual.each do |result|
-          expect(result.start_time).to be < mid_time
-          expect(result.end_time).to be > mid_time
+    end
+
+    let(:result) do
+      double(
+        :result,
+        success: [:success1, :success2],
+        failure: []
+      )
+    end
+    let(:result_builder) { double(:builder, for: result) }
+
+    describe "#safe_execute" do
+      context "when #execute runs without exception" do
+        let(:source) { TestSource.new(result_builder) {|result| "foo" }}
+        it "returns the result of #execute" do
+          expect(source.safe_execute).to eql("foo")
         end
       end
+
+      context "when #execute throws an exception" do
+        let(:source) { TestSource.new(result_builder) {|_| raise TestSource::Error} }
+        it "logs the exception" do
+          expect(RegalBird.config.logger).to receive(:error)
+          source.safe_execute
+        end
+        it "returns an empty array" do
+          expect(source.safe_execute).to eql([])
+        end
+      end
+
     end
   end
 end
+
