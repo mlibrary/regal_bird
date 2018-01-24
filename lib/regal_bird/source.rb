@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "regal_bird/init"
 require "regal_bird/source_result"
 
 module RegalBird
@@ -23,7 +24,7 @@ module RegalBird
       begin
         execute(result)
       rescue StandardError => e
-        RegalBird.config.logger.error "#{e.message}\n#{e.backtrace}"
+        Settings.logger.error "#{e.message}\n#{e.backtrace}"
         []
       end
     end

@@ -1,0 +1,2 @@
+plan_dir: <%= RegalBird.root/"spec"/"fledgling"/"plans" %>
+log_file: <%= RegalBird.root/"log"/"regal_bird.log" %>

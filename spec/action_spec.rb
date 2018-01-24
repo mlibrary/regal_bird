@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "regal_bird/components"
+require "regal_bird/init"
 require "regal_bird/action"
 
 RSpec.describe RegalBird::Action do
@@ -54,7 +54,7 @@ RSpec.describe RegalBird::Action do
     context "when #execute throws an exception" do
       let(:action) { TestAction.new(event, result_builder) {|_| raise TestAction::Error} }
       it "logs the exception" do
-        expect(RegalBird.config.logger).to receive(:error)
+        expect(Settings.logger).to receive(:error)
         action.safe_execute
       end
       it "returns a failure event" do

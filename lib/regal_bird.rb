@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require "regal_bird/components"
-require "regal_bird/configuration"
+require "regal_bird/init"
 require "regal_bird/version"
 require "regal_bird/action"
 require "regal_bird/active_plan"

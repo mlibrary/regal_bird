@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "regal_bird/components"
+require "regal_bird/init"
 require "regal_bird/source"
 
 module RegalBird
@@ -37,7 +37,7 @@ module RegalBird
       context "when #execute throws an exception" do
         let(:source) { TestSource.new(result_builder) {|_| raise TestSource::Error} }
         it "logs the exception" do
-          expect(RegalBird.config.logger).to receive(:error)
+          expect(Settings.logger).to receive(:error)
           source.safe_execute
         end
         it "returns an empty array" do
